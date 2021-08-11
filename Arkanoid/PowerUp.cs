@@ -6,9 +6,13 @@ using System.Threading.Tasks;
 
 namespace Arkanoid
 {
-    enum powerUpType
+    public enum powerUpType
     {
-
+        NONE,
+        SUPERBALL,
+        TRIPLEBALL,
+        SPEEDUP,
+        SLOWDOWN
     }
 
     public class PowerUp

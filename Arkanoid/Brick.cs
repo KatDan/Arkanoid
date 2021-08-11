@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace Arkanoid
 {
@@ -11,10 +12,13 @@ namespace Arkanoid
         int thickness;
         int hits;
 
-        public Brick(int thickness = 1)
+        PictureBox pictureBox;
+
+        public Brick(PictureBox picBox, int thickness = 1)
         {
             this.thickness = thickness;
-            this.hits = 0;
+            hits = 0;
+            pictureBox = picBox;
         }
     }
 }
