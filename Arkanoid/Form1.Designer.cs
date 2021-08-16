@@ -31,25 +31,26 @@ namespace Arkanoid
         {
             this.components = new System.ComponentModel.Container();
             this.timer = new System.Windows.Forms.Timer(this.components);
-            this.Label = new System.Windows.Forms.Label();
+            this.levelLabel = new System.Windows.Forms.Label();
             this.scoreLabel = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // timer
             // 
+            this.timer.Interval = 15;
             this.timer.Tick += new System.EventHandler(this.tick);
             // 
-            // Label
+            // levelLabel
             // 
-            this.Label.AutoSize = true;
-            this.Label.Font = new System.Drawing.Font("Press Start 2P", 8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            this.Label.ForeColor = System.Drawing.SystemColors.ButtonFace;
-            this.Label.Location = new System.Drawing.Point(11, 9);
-            this.Label.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-            this.Label.Name = "Label";
-            this.Label.Size = new System.Drawing.Size(89, 11);
-            this.Label.TabIndex = 0;
-            this.Label.Text = "level: ";
+            this.levelLabel.AutoSize = true;
+            this.levelLabel.Font = new System.Drawing.Font("Press Start 2P", 8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.levelLabel.ForeColor = System.Drawing.SystemColors.ButtonFace;
+            this.levelLabel.Location = new System.Drawing.Point(11, 9);
+            this.levelLabel.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.levelLabel.Name = "levelLabel";
+            this.levelLabel.Size = new System.Drawing.Size(112, 14);
+            this.levelLabel.TabIndex = 0;
+            this.levelLabel.Text = "level: ";
             // 
             // scoreLabel
             // 
@@ -59,7 +60,7 @@ namespace Arkanoid
             this.scoreLabel.Location = new System.Drawing.Point(353, 9);
             this.scoreLabel.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.scoreLabel.Name = "scoreLabel";
-            this.scoreLabel.Size = new System.Drawing.Size(77, 11);
+            this.scoreLabel.Size = new System.Drawing.Size(97, 14);
             this.scoreLabel.TabIndex = 1;
             this.scoreLabel.Text = "score:";
             // 
@@ -68,7 +69,7 @@ namespace Arkanoid
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
             this.BackColor = System.Drawing.SystemColors.ActiveCaptionText;
             this.ClientSize = new System.Drawing.Size(642, 529);
-            this.Controls.Add(this.Label);
+            this.Controls.Add(this.levelLabel);
             this.Controls.Add(this.scoreLabel);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.Margin = new System.Windows.Forms.Padding(2);
@@ -77,6 +78,7 @@ namespace Arkanoid
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Arkanoid";
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.keyIsDown);
+            this.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.keyIsPressed);
             this.KeyUp += new System.Windows.Forms.KeyEventHandler(this.keyIsUp);
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -85,7 +87,7 @@ namespace Arkanoid
 
         #endregion
         private System.Windows.Forms.Timer timer;
-        private System.Windows.Forms.Label Label;
+        private System.Windows.Forms.Label levelLabel;
         private System.Windows.Forms.Label scoreLabel;
     }
 }

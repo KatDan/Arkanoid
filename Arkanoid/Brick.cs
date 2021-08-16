@@ -9,16 +9,33 @@ namespace Arkanoid
 {
     public class Brick
     {
-        int thickness;
-        int hits;
+        private int thickness;
+        private int hits;
+
+        private int score;
+
+        public int Score { get => score; }
+
+        internal bool isAlive = true;
 
         PictureBox pictureBox;
 
         public Brick(PictureBox picBox, int thickness = 1)
         {
             this.thickness = thickness;
+            score = 10 * thickness;
             hits = 0;
             pictureBox = picBox;
+        }
+
+        public void hit()
+        {
+            hits += 1;
+            if(hits >= thickness)
+            {
+                isAlive = false;
+                pictureBox.Visible = false;
+            }
         }
     }
 }
