@@ -13,6 +13,8 @@ namespace Arkanoid
 {
     public partial class GameForm : Form
     {
+        internal Panel panel;
+
         internal int bricksPerLine = 8;
 
         int lives = 3;
@@ -54,6 +56,14 @@ namespace Arkanoid
             this.scoreLabel.Text = String.Format("score: {0:D6}", score);
             List<List<int>> brickMapData = loadLevelBrickInfo(1);
             levelBrickMap = initializeLevelBricks(brickMapData);
+
+            panel = new Panel
+            {
+                Size = new Size(640, 480),
+                Location = new Point(0, 50),
+                BackColor = Color.Black,
+            };
+            Controls.Add(panel);
 
             initializePaddle();
             initializeBall();
@@ -120,9 +130,11 @@ namespace Arkanoid
                             Size = new Size(brickWidth, brickHeight),
                             Location = new Point(column * brickWidth, brickUpperIndentation + line * brickHeight),
                             Image = Properties.Resources.cihla,
-                            SizeMode = PictureBoxSizeMode.Normal
+                            SizeMode = PictureBoxSizeMode.Normal,
+                            Parent = panel
                         };
                         Controls.Add(brickPictureBox);
+                        brickPictureBox.BringToFront();
                         brickLine.Add(new Brick(brickPictureBox, thickness));
                         brickCount++;
                     }
@@ -138,16 +150,18 @@ namespace Arkanoid
 
         private void initializePaddle()
         {
-            int paddleWidth = 100;
+            int paddleWidth = panel.Width;
             int paddleHeight = 20;
             PictureBox paddlePicBox = new PictureBox
             {
                 Size = new Size(paddleWidth, paddleHeight),
-                Location = new Point((Width-18)/2 - paddleWidth/2 , Height - 50 - paddleHeight),
+                Location = new Point(panel.Width/2 - paddleWidth/2 , Height - 50 - paddleHeight),
                 Image = Properties.Resources.cihla,
-                SizeMode = PictureBoxSizeMode.StretchImage
+                SizeMode = PictureBoxSizeMode.StretchImage,
+                Parent = panel
             };
             Controls.Add(paddlePicBox);
+            paddlePicBox.BringToFront();
             paddle = new Paddle(paddlePicBox);
         }
 
@@ -157,11 +171,13 @@ namespace Arkanoid
             PictureBox ballPicBox = new PictureBox
             {
                 Size = new Size(ballSize,ballSize),
-                Location = new Point((Width - 18) / 2 - ballSize/2, Height - 50 - paddle.Height - ballSize),
+                Location = new Point(panel.Width / 2 - ballSize/2, Height - 50 - paddle.Height - ballSize),
                 Image = Properties.Resources.ball,
-                SizeMode = PictureBoxSizeMode.StretchImage
+                SizeMode = PictureBoxSizeMode.StretchImage,
+                Parent = panel
             };
             Controls.Add(ballPicBox);
+            ballPicBox.BringToFront();
             balls.Add(new Ball(ballPicBox));
         }
 
@@ -189,7 +205,7 @@ namespace Arkanoid
                     }
                     if (collider.ballHitsPaddle(ball))
                     {
-                        collider.bounceVertically(ball);
+                        collider.bounceOnPaddle(ball);
                     }
                 }
                 else
@@ -255,6 +271,11 @@ namespace Arkanoid
                 if (timer.Enabled) timer.Stop();
                 else timer.Start();
             }
+        }
+
+        private void panel_Paint(object sender, PaintEventArgs e)
+        {
+
         }
     }
 }

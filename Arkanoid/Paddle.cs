@@ -46,7 +46,7 @@ namespace Arkanoid
 
         PictureBox pictureBox;
 
-        internal int internalCurvatureRadius = 20;
+        internal int internalCurvatureRadius;
 
         public Paddle(PictureBox picBox) {
             pictureBox = picBox;
@@ -54,6 +54,7 @@ namespace Arkanoid
             width = picBox.Width;
             x = picBox.Location.X + width / 2;
             y = picBox.Location.Y + height / 2;
+            internalCurvatureRadius = width * 4;
         }
 
         public void resize(int newWidth)

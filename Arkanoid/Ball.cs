@@ -9,24 +9,24 @@ namespace Arkanoid
 {
     public class Ball
     {
-        private int x;
-        private int y;
+        private double x;
+        private double y;
 
-        public int X
+        public double X
         {
             get => x;
             set
             {
                 x = value;
-                pictureBox.Location = new System.Drawing.Point(X - radius, pictureBox.Location.Y);
+                pictureBox.Location = new System.Drawing.Point((int)X - radius, pictureBox.Location.Y);
             }
         }
 
-        public int Y { get => y;
+        public double Y { get => y;
             set
             {
                 y = value;
-                pictureBox.Location = new System.Drawing.Point(pictureBox.Location.X, Y - radius);
+                pictureBox.Location = new System.Drawing.Point(pictureBox.Location.X, (int)Y - radius);
             }
         }
 
@@ -87,10 +87,10 @@ namespace Arkanoid
 
         public void move()
         {
-            x = (int)(x + speedX);
-            y = (int)(y - speedY);
+            x = x + speedX;
+            y = y - speedY;
 
-            pictureBox.Location = new System.Drawing.Point(x - radius, y - radius);
+            pictureBox.Location = new System.Drawing.Point((int)x - radius, (int)y - radius);
         }
 
     }

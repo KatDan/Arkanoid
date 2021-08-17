@@ -48,7 +48,7 @@ namespace Arkanoid
             this.levelLabel.Location = new System.Drawing.Point(11, 9);
             this.levelLabel.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.levelLabel.Name = "levelLabel";
-            this.levelLabel.Size = new System.Drawing.Size(112, 14);
+            this.levelLabel.Size = new System.Drawing.Size(89, 11);
             this.levelLabel.TabIndex = 0;
             this.levelLabel.Text = "level: ";
             // 
@@ -60,7 +60,7 @@ namespace Arkanoid
             this.scoreLabel.Location = new System.Drawing.Point(353, 9);
             this.scoreLabel.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.scoreLabel.Name = "scoreLabel";
-            this.scoreLabel.Size = new System.Drawing.Size(97, 14);
+            this.scoreLabel.Size = new System.Drawing.Size(77, 11);
             this.scoreLabel.TabIndex = 1;
             this.scoreLabel.Text = "score:";
             // 
