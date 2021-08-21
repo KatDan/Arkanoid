@@ -73,6 +73,7 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
+    <None Include="bin\Debug\level1.csv" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -94,6 +95,24 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\ball.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\paddle.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\paddle-removebg-preview.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\crack1.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\crack2.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\crack3.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\crack4.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

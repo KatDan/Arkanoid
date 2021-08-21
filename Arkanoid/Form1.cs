@@ -15,6 +15,8 @@ namespace Arkanoid
     {
         internal Panel panel;
 
+        internal bool playerLives = true;
+
         internal int bricksPerLine = 8;
 
         int lives = 3;
@@ -25,10 +27,7 @@ namespace Arkanoid
         {
             get { return (int)((Width-18) / bricksPerLine); }
         }
-        public int brickHeight
-        {
-            get { return (int)(brickWidth / 4); }
-        }
+        public int brickHeight = 20;
 
         internal Paddle paddle;
         internal List<Ball> balls;
@@ -70,16 +69,24 @@ namespace Arkanoid
             paddle.holdsBall = true;
         }
 
-        private void resetPosition()
+        private void resetPosition(int level = 1)
         {
-            List<List<int>> brickMapData = loadLevelBrickInfo(1);
+            List<List<int>> brickMapData = loadLevelBrickInfo(level);
             levelBrickMap = initializeLevelBricks(brickMapData);
 
             paddle.X = (Width - 18) / 2;
             balls[0].X = (Width - 18) / 2;
-            balls[0].Y = paddle.Y - paddle.Height / 2 - balls[0].radius / 2;
+            balls[0].Y = paddle.Y - paddle.Height / 2 - balls[0].radius;
 
             paddle.holdsBall = true;
+
+            if(level == 1)
+            {
+                score = 0;
+                level = 1;
+                scoreLabel.Text = String.Format("score: {0:D6}", score);
+            }
+            levelLabel.Text = "level: " + level.ToString();
         }
 
         private List<List<int>> loadLevelBrickInfo(int level)
@@ -88,10 +95,12 @@ namespace Arkanoid
             string filename = "level" + level.ToString() + ".csv";
             using(var reader = new StreamReader(@filename))
             {
+                bricksPerLine = 0;
                 while (!reader.EndOfStream)
                 {
                     List<int> brickLine = new List<int>();
                     var line = reader.ReadLine().Split(';');
+                    if (bricksPerLine == 0) bricksPerLine = line.Length;
                     if(line.Length != bricksPerLine)
                     {
                         throw new LevelFormatException();
@@ -105,12 +114,13 @@ namespace Arkanoid
                             {
                                 throw new LevelFormatException();
                             }
-                            brickLine.Add(thickness);
                         }
+                        brickLine.Add(thickness);
                     }
                     result.Add(brickLine);
                 }
             }
+            if (result.Count < 1) throw new LevelFormatException();
             return result;
         }
 
@@ -129,8 +139,9 @@ namespace Arkanoid
                         {
                             Size = new Size(brickWidth, brickHeight),
                             Location = new Point(column * brickWidth, brickUpperIndentation + line * brickHeight),
-                            Image = Properties.Resources.cihla,
-                            SizeMode = PictureBoxSizeMode.Normal,
+                            BackgroundImage = Properties.Resources.cihla,
+                            Image = Properties.Resources.crack1,
+                            SizeMode = PictureBoxSizeMode.Zoom,
                             Parent = panel
                         };
                         Controls.Add(brickPictureBox);
@@ -150,13 +161,13 @@ namespace Arkanoid
 
         private void initializePaddle()
         {
-            int paddleWidth = panel.Width;
+            int paddleWidth = 100;
             int paddleHeight = 20;
             PictureBox paddlePicBox = new PictureBox
             {
                 Size = new Size(paddleWidth, paddleHeight),
                 Location = new Point(panel.Width/2 - paddleWidth/2 , Height - 50 - paddleHeight),
-                Image = Properties.Resources.cihla,
+                Image = Properties.Resources.paddle,
                 SizeMode = PictureBoxSizeMode.StretchImage,
                 Parent = panel
             };
@@ -200,6 +211,10 @@ namespace Arkanoid
                         {
                             //game over
                             timer.Stop();
+                            infoLabel.BringToFront();
+                            infoLabel.Visible = true;
+                            infoLabel.Text = "Game Over";
+                            playerLives = false;
                             break;
                         }
                     }
@@ -220,13 +235,21 @@ namespace Arkanoid
                     Brick brick = levelBrickMap[row][column];
                     if (brick != null && brick.isAlive)
                     {
-                        Console.WriteLine("Brick hit. [{0},{1}]", row, column);
                         brick.hit();
                         if (!brick.isAlive)
                         {
                             brickCount--;
                             score += brick.Score;
                             scoreLabel.Text = String.Format("score: {0:D6}", score);
+
+                            if(brickCount == 0)
+                            {
+                                timer.Stop();
+                                //going to the next level
+                                showInfoLabel("level up!");
+                                resetPosition(++level);
+                                showInfoLabel("level " + level.ToString());
+                            }
                         }
                     }
                     collider.bounceVertically(ball);
@@ -234,6 +257,13 @@ namespace Arkanoid
                 ball.move();
                 
             }
+        }
+
+        private void showInfoLabel(string text)
+        {
+            infoLabel.Visible = true;
+            infoLabel.BringToFront();
+            infoLabel.Text = text;
         }
 
         private void keyIsDown(object sender, KeyEventArgs e)
@@ -252,30 +282,37 @@ namespace Arkanoid
                 paddle.X -= paddle.speed;
                 if (paddle.holdsBall) balls[0].X -= paddle.speed;
             }
-            else if(e.KeyData == Keys.Space)
-            {
-                if (paddle.holdsBall) paddle.holdsBall = false;
-                timer.Start();
-            }
-        }
-
-        private void keyIsUp(object sender, KeyEventArgs e)
-        {
-
+            
         }
 
         private void keyIsPressed(object sender, KeyPressEventArgs e)
         {
             if(e.KeyChar == 'p' || e.KeyChar == 'P')
             {
-                if (timer.Enabled) timer.Stop();
-                else timer.Start();
+                if (timer.Enabled)
+                {
+                    timer.Stop();
+                    showInfoLabel("paused");
+                }
+                else
+                {
+                    infoLabel.Visible = false;
+                    timer.Start();
+                }
+            }
+            if(e.KeyChar == ' ')
+            {
+                infoLabel.Visible = false;
+                if (!playerLives)
+                {
+                    playerLives = true;
+                    resetPosition();
+                    return;
+                }
+                if (paddle.holdsBall) paddle.holdsBall = false;
+                timer.Start();
             }
         }
 
-        private void panel_Paint(object sender, PaintEventArgs e)
-        {
-
-        }
     }
 }

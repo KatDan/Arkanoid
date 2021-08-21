@@ -54,7 +54,7 @@ namespace Arkanoid
             width = picBox.Width;
             x = picBox.Location.X + width / 2;
             y = picBox.Location.Y + height / 2;
-            internalCurvatureRadius = width * 4;
+            internalCurvatureRadius = 2*width;
         }
 
         public void resize(int newWidth)
