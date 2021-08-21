@@ -1,10 +1,12 @@
-﻿using System;
+﻿using Arkanoid.Properties;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Resources;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -41,6 +43,7 @@ namespace Arkanoid
 
         private Collider collider;
 
+        public static ResourceManager resourceManager = new System.Resources.ResourceManager("Arkanoid.Properties.Resources", typeof(Resources).Assembly);
         public GameForm()
         {
             InitializeComponent();
@@ -139,11 +142,13 @@ namespace Arkanoid
                         {
                             Size = new Size(brickWidth, brickHeight),
                             Location = new Point(column * brickWidth, brickUpperIndentation + line * brickHeight),
-                            BackgroundImage = Properties.Resources.cihla,
-                            Image = Properties.Resources.crack1,
-                            SizeMode = PictureBoxSizeMode.Zoom,
+                            BackgroundImageLayout = ImageLayout.Stretch,
+                            SizeMode = PictureBoxSizeMode.StretchImage,
                             Parent = panel
                         };
+                        object obj = resourceManager.GetObject("brick" + thickness.ToString());
+                        brickPictureBox.BackgroundImage = (System.Drawing.Bitmap)obj;
+
                         Controls.Add(brickPictureBox);
                         brickPictureBox.BringToFront();
                         brickLine.Add(new Brick(brickPictureBox, thickness));

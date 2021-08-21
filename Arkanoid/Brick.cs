@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Resources;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -20,7 +21,7 @@ namespace Arkanoid
 
         PictureBox pictureBox;
 
-        public Brick(PictureBox picBox, int thickness = 1)
+        public Brick(PictureBox picBox,int thickness = 1)
         {
             this.thickness = thickness;
             score = 10 * thickness;
@@ -35,6 +36,11 @@ namespace Arkanoid
             {
                 isAlive = false;
                 pictureBox.Visible = false;
+            }
+            else
+            {
+                object obj = GameForm.resourceManager.GetObject("crack" + (thickness-hits).ToString());
+                pictureBox.Image = (System.Drawing.Bitmap)obj;
             }
         }
     }
