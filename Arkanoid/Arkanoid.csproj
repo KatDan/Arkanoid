@@ -55,6 +55,7 @@
     <Compile Include="Form1.Designer.cs">
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
+    <Compile Include="Game.cs" />
     <Compile Include="LevelFormatException.cs" />
     <Compile Include="Paddle.cs" />
     <Compile Include="PowerUp.cs" />
@@ -88,6 +89,7 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\pixel_heart.png.crdownload" />
     <None Include="Resources\testbrick.png" />
   </ItemGroup>
   <ItemGroup>
@@ -128,6 +130,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\brick1.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\pngegg.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

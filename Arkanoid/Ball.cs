@@ -72,7 +72,7 @@ namespace Arkanoid
 
         Random random = new Random();
 
-        PictureBox pictureBox;
+        internal PictureBox pictureBox;
 
         public Ball(PictureBox picBox)
         {

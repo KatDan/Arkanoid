@@ -44,11 +44,26 @@ namespace Arkanoid
         private Collider collider;
 
         public static ResourceManager resourceManager = new System.Resources.ResourceManager("Arkanoid.Properties.Resources", typeof(Resources).Assembly);
+
+        public Label infoLabel = new Label
+        {
+            Size = new Size(400, 100),
+            Location = new Point(120, 200),
+            Font = new Font("Press Start 2P", 15),
+            BackColor = Color.Transparent,
+            ForeColor = Color.White,
+            TextAlign = ContentAlignment.MiddleCenter
+        };
+
+        public PictureBox[] livesHearts;
+        
         public GameForm()
         {
             InitializeComponent();
             balls = new List<Ball>();
             collider = new Collider(this);
+            infoLabel.Parent = this;
+            Controls.Add(infoLabel);
             initializeGame();
         }
 
@@ -58,6 +73,8 @@ namespace Arkanoid
             this.scoreLabel.Text = String.Format("score: {0:D6}", score);
             List<List<int>> brickMapData = loadLevelBrickInfo(1);
             levelBrickMap = initializeLevelBricks(brickMapData);
+
+            initializeHearts();
 
             panel = new Panel
             {
@@ -72,8 +89,26 @@ namespace Arkanoid
             paddle.holdsBall = true;
         }
 
+        public void initializeHearts()
+        {
+            livesHearts = new PictureBox[lives];
+            for(int index = 0; index < livesHearts.Length; index++)
+            {
+                PictureBox life = new PictureBox
+                {
+                    Size = new Size(20,20),
+                    Location = new Point(10 + index*22,25),
+                    Image = Properties.Resources.heart,
+                    SizeMode = PictureBoxSizeMode.StretchImage
+                };
+                Controls.Add(life);
+                livesHearts[index] = life;
+            }
+        }
+
         private void resetPosition(int level = 1)
         {
+            levelBrickMap.Clear();
             List<List<int>> brickMapData = loadLevelBrickInfo(level);
             levelBrickMap = initializeLevelBricks(brickMapData);
 
@@ -106,7 +141,7 @@ namespace Arkanoid
                     if (bricksPerLine == 0) bricksPerLine = line.Length;
                     if(line.Length != bricksPerLine)
                     {
-                        throw new LevelFormatException();
+                        throw new LevelFormatException("The lines must be of the equal length.");
                     }
                     foreach (string item in line)
                     {
@@ -115,7 +150,7 @@ namespace Arkanoid
                         {
                             if (!int.TryParse(item, out thickness))
                             {
-                                throw new LevelFormatException();
+                                throw new LevelFormatException("Integer needed for defining the thickness of a brick.");
                             }
                         }
                         brickLine.Add(thickness);
@@ -123,7 +158,7 @@ namespace Arkanoid
                     result.Add(brickLine);
                 }
             }
-            if (result.Count < 1) throw new LevelFormatException();
+            if (result.Count < 1) throw new LevelFormatException("At least one line of blocks is required.");
             return result;
         }
 
@@ -214,13 +249,21 @@ namespace Arkanoid
                         }
                         else
                         {
+                            lives--;
                             //game over
                             timer.Stop();
-                            infoLabel.BringToFront();
-                            infoLabel.Visible = true;
-                            infoLabel.Text = "Game Over";
-                            playerLives = false;
-                            break;
+                            if(lives > 0)
+                            {
+                                resetPosition();
+                                livesHearts[lives].Visible = false;
+                                showInfoLabel(lives.ToString()+(lives==1?" life left":" lives left"));
+                            }
+                            else
+                            {
+                                showInfoLabel("Game Over");
+                                playerLives = false;
+                                break;
+                            }
                         }
                     }
                     if (collider.ballHitsPaddle(ball))
@@ -241,12 +284,11 @@ namespace Arkanoid
                     if (brick != null && brick.isAlive)
                     {
                         brick.hit();
+                        score += brick.Score;
+                        scoreLabel.Text = String.Format("score: {0:D6}", score);
                         if (!brick.isAlive)
                         {
                             brickCount--;
-                            score += brick.Score;
-                            scoreLabel.Text = String.Format("score: {0:D6}", score);
-
                             if(brickCount == 0)
                             {
                                 timer.Stop();
@@ -269,6 +311,10 @@ namespace Arkanoid
             infoLabel.Visible = true;
             infoLabel.BringToFront();
             infoLabel.Text = text;
+            foreach(Ball ball in balls)
+            {
+                ball.pictureBox.BringToFront();
+            }
         }
 
         private void keyIsDown(object sender, KeyEventArgs e)
@@ -311,6 +357,11 @@ namespace Arkanoid
                 if (!playerLives)
                 {
                     playerLives = true;
+                    lives = 3;
+                    foreach(PictureBox heart in livesHearts)
+                    {
+                        heart.Visible = true;
+                    }
                     resetPosition();
                     return;
                 }

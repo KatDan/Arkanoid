@@ -9,10 +9,14 @@ namespace Arkanoid
     [Serializable]
     public class LevelFormatException : Exception
     {
-        public const string lineError = ": The file the level is loaded from is in wrong format.";
+        public const string errorMsg = ": The file that level is loaded from is in wrong format.";
 
         public LevelFormatException()
-            : base(lineError)
+            : base(errorMsg)
+        { }
+
+        public LevelFormatException(string msg)
+            : base(errorMsg+" "+msg)
         { }
 
         public LevelFormatException(string message, Exception innerException)
