@@ -9,26 +9,8 @@ namespace Arkanoid
 {
     public class Ball
     {
-        private double x;
-        private double y;
-
-        public double X
-        {
-            get => x;
-            set
-            {
-                x = value;
-                pictureBox.Location = new System.Drawing.Point((int)X - radius, pictureBox.Location.Y);
-            }
-        }
-
-        public double Y { get => y;
-            set
-            {
-                y = value;
-                pictureBox.Location = new System.Drawing.Point(pictureBox.Location.X, (int)Y - radius);
-            }
-        }
+        internal double x;
+        internal double y;
 
         internal int speed = 3;
 
@@ -72,14 +54,11 @@ namespace Arkanoid
 
         Random random = new Random();
 
-        internal PictureBox pictureBox;
-
-        public Ball(PictureBox picBox)
+        public Ball(int radius, Paddle paddle)
         {
-            pictureBox = picBox;
-            radius = picBox.Width/2;
-            x = picBox.Location.X + radius;
-            y = picBox.Location.Y + radius;
+            this.radius = radius;
+            this.x = paddle.x;
+            this.y = paddle.y - paddle.Height/2 - radius;
             
             double angleDeg = 45 + 90*random.NextDouble();
             Angle = angleDeg * Math.PI / 180;
@@ -89,8 +68,6 @@ namespace Arkanoid
         {
             x = x + speedX;
             y = y - speedY;
-
-            pictureBox.Location = new System.Drawing.Point((int)x - radius, (int)y - radius);
         }
 
     }

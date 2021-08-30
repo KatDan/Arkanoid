@@ -9,30 +9,11 @@ namespace Arkanoid
 {
     public class Paddle
     {
-
         // The x coordinate of the center of the paddle
-        private int x;
-        public int X
-        {
-            get => x;
-            set
-            {
-                x = value;
-                pictureBox.Location = new System.Drawing.Point(x - width / 2, y - height / 2);
-            }     
-        }
+        internal int x;
 
         // the y coordinate of the center of the paddle
-        private int y;
-        public int Y
-        {
-            get => y;
-            set
-            {
-                y = value;
-                pictureBox.Location = new System.Drawing.Point(x - width/2, y - height/2);
-            }
-        }
+        internal int y;
 
         internal bool holdsBall;
 
@@ -44,23 +25,19 @@ namespace Arkanoid
         public int Height { get => height; }
         public int Width { get => width; }
 
-        PictureBox pictureBox;
-
         internal int internalCurvatureRadius;
 
-        public Paddle(PictureBox picBox) {
-            pictureBox = picBox;
-            height = picBox.Height;
-            width = picBox.Width;
-            x = picBox.Location.X + width / 2;
-            y = picBox.Location.Y + height / 2;
+        public Paddle(int centerX, int centerY, int width, int height) {
+            this.height = height;
+            this.width = width;
+            x = centerX;
+            y = centerY;
             internalCurvatureRadius = 3*width;
         }
 
         public void resize(int newWidth)
         {
             width = newWidth;
-            pictureBox.Location = new System.Drawing.Point(x - width / 2, y - height / 2);
         }
 
     }

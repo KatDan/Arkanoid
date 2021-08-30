@@ -1,24 +1,29 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace Arkanoid
 {
     public class Collider
     {
-        GameForm form;
+        Rectangle panelBounds;
 
-        public Collider(GameForm form)
+        Game game;
+
+        public Collider(Rectangle panel, Game game)
         {
-            this.form = form;
+            panelBounds = panel;
+            this.game = game;
         }
 
         public bool ballHitsWall(Ball ball)
         {
-            return (ball.X - ball.radius <= 1 && (ball.Angle > Math.PI/2 || ball.Angle < - Math.PI/2 ) 
-                || (ball.X + ball.radius >= form.panel.Width - 1 && (ball.Angle <= Math.PI/2 && ball.Angle >= -Math.PI/2)));
+            return (ball.x - ball.radius <= panelBounds.X + 1 && (ball.Angle > Math.PI/2 || ball.Angle < - Math.PI/2 ) 
+                || (ball.x + ball.radius >= panelBounds.X + panelBounds.Width - 1 && (ball.Angle <= Math.PI/2 && ball.Angle >= -Math.PI/2)));
         }
 
         public void bounceHorizontally(Ball ball)
@@ -33,8 +38,8 @@ namespace Arkanoid
 
         public void bounceOnPaddle(Ball ball)
         {
-            double xDist = Math.Abs(ball.X - form.paddle.X);
-            double theta = Math.Acos(xDist / form.paddle.internalCurvatureRadius);
+            double xDist = Math.Abs(ball.x - game.paddle.x);
+            double theta = Math.Acos(xDist / game.paddle.internalCurvatureRadius);
             double newAlpha = 2 * theta - ball.Angle - Math.PI;
 
             double minAngle = 5 * Math.PI / 180;
@@ -51,28 +56,28 @@ namespace Arkanoid
             row = -1;
             column = -1;
 
-            if (ball.Y - ball.radius > form.brickUpperIndentation + form.levelBrickMap.Count * form.brickHeight) return false;
+            if (ball.y - ball.radius > panelBounds.Y + game.levelBrickMap.Count * game.brickHeight) return false;
 
-            double innerSquareMinX = ball.X - ball.radius * Math.Cos(Math.PI / 4);
-            double innerSquareMaxX = ball.X + ball.radius * Math.Cos(Math.PI / 4);
-            double innerSquareMinY = ball.Y - ball.radius * Math.Cos(Math.PI / 4);
-            double innerSquareMaxY = ball.Y + ball.radius * Math.Cos(Math.PI / 4);
+            double innerSquareMinX = ball.x - ball.radius * Math.Cos(Math.PI / 4);
+            double innerSquareMaxX = ball.x + ball.radius * Math.Cos(Math.PI / 4);
+            double innerSquareMinY = ball.y - ball.radius * Math.Cos(Math.PI / 4);
+            double innerSquareMaxY = ball.y + ball.radius * Math.Cos(Math.PI / 4);
 
-            int minRow = ((int)(innerSquareMinY - form.brickUpperIndentation - 1) / form.brickHeight);
+            int minRow = ((int)(innerSquareMinY - panelBounds.Y - 1) / game.brickHeight);
             if (minRow < 0) minRow = 0;
-            if (minRow >= form.levelBrickMap.Count) minRow = form.levelBrickMap.Count - 1;
+            if (minRow >= game.levelBrickMap.Count) minRow = game.levelBrickMap.Count - 1;
 
-            int maxRow = ((int)(innerSquareMaxY - form.brickUpperIndentation + 1) / form.brickHeight);
+            int maxRow = ((int)(innerSquareMaxY - panelBounds.Y + 1) / game.brickHeight);
             if (maxRow < 0) maxRow = 0;
-            if (maxRow >= form.levelBrickMap.Count) maxRow = form.levelBrickMap.Count - 1;
+            if (maxRow >= game.levelBrickMap.Count) maxRow = game.levelBrickMap.Count - 1;
 
-            int minColumn = ((int)(innerSquareMinX - 1) / form.brickWidth);
+            int minColumn = ((int)(innerSquareMinX - 1) / game.brickWidth);
             if (minColumn < 0) minColumn = 0;
-            if (minColumn >= form.levelBrickMap[0].Count) minColumn = form.levelBrickMap[0].Count - 1;
+            if (minColumn >= game.levelBrickMap[0].Count) minColumn = game.levelBrickMap[0].Count - 1;
 
-            int maxColumn = ((int)(innerSquareMaxX + 1) / form.brickWidth);
+            int maxColumn = ((int)(innerSquareMaxX + 1) / game.brickWidth);
             if (maxColumn < 0) minRow = 0;
-            if (maxColumn >= form.levelBrickMap[0].Count) maxColumn = form.levelBrickMap[0].Count - 1;
+            if (maxColumn >= game.levelBrickMap[0].Count) maxColumn = game.levelBrickMap[0].Count - 1;
 
             switch (ball.angleQuadrant)
             {
@@ -83,7 +88,7 @@ namespace Arkanoid
                         {
                             for(int columnIterator = minColumn; columnIterator <= maxColumn; columnIterator++)
                             {
-                                Brick brick = form.levelBrickMap[rowIterator][columnIterator];
+                                Brick brick = game.levelBrickMap[rowIterator][columnIterator];
                                 if(brick != null && brick.isAlive)
                                 {
                                     row = rowIterator;
@@ -101,7 +106,7 @@ namespace Arkanoid
                         {
                             for (int columnIterator = maxColumn; columnIterator >= minColumn; columnIterator--)
                             {
-                                Brick brick = form.levelBrickMap[rowIterator][columnIterator];
+                                Brick brick = game.levelBrickMap[rowIterator][columnIterator];
                                 if (brick != null && brick.isAlive)
                                 {
                                     row = rowIterator;
@@ -119,7 +124,7 @@ namespace Arkanoid
                         {
                             for (int columnIterator = maxColumn; columnIterator >= minColumn; columnIterator--)
                             {
-                                Brick brick = form.levelBrickMap[rowIterator][columnIterator];
+                                Brick brick = game.levelBrickMap[rowIterator][columnIterator];
                                 if (brick != null && brick.isAlive)
                                 {
                                     row = rowIterator;
@@ -137,7 +142,7 @@ namespace Arkanoid
                         {
                             for (int columnIterator = minColumn; columnIterator <= maxColumn; columnIterator++)
                             {
-                                Brick brick = form.levelBrickMap[rowIterator][columnIterator];
+                                Brick brick = game.levelBrickMap[rowIterator][columnIterator];
                                 if (brick != null && brick.isAlive)
                                 {
                                     row = rowIterator;
@@ -155,20 +160,20 @@ namespace Arkanoid
 
         public bool ballFallsDown(Ball ball)
         {
-            return ball.Y + ball.radius >= form.Height - 18 - 1;
+            return ball.y + ball.radius >= panelBounds.Y+panelBounds.Height - 1;
         }
 
         public bool ballHitsUpperBound(Ball ball)
         {
-            return ball.Y - ball.radius - 1 <= form.panel.Location.Y;
+            return ball.y - ball.radius - 1 <= panelBounds.Y;
         }
 
-        public bool ballHitsPaddle(Ball ball)
+        public bool ballHitsPaddle(Ball ball, Paddle paddle)
         {
-            return (ball.Y + ball.radius + 1 >= form.paddle.Y - form.paddle.Height / 2
-                && ball.Y < form.paddle.Y - form.paddle.Height / 2
-                && ball.X + ball.radius >= form.paddle.X - form.paddle.Width / 2
-                && ball.X - ball.radius <= form.paddle.X + form.paddle.Width / 2);
+            return (ball.y + ball.radius + 1 >= paddle.y - paddle.Height / 2
+                && ball.y < paddle.y - paddle.Height / 2
+                && ball.x + ball.radius >= paddle.x - paddle.Width / 2
+                && ball.x - ball.radius <= paddle.x + paddle.Width / 2);
         }
     }
 }

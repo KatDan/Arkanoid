@@ -10,8 +10,9 @@ namespace Arkanoid
 {
     public class Brick
     {
-        private int thickness;
+        internal int thickness;
         private int hits;
+        public int Hits { get => hits; }
 
         private int score;
 
@@ -19,14 +20,11 @@ namespace Arkanoid
 
         internal bool isAlive = true;
 
-        PictureBox pictureBox;
-
-        public Brick(PictureBox picBox,int thickness = 1)
+        public Brick(int thickness = 1)
         {
             this.thickness = thickness;
             score = 10 * thickness;
             hits = 0;
-            pictureBox = picBox;
         }
 
         public void hit()
@@ -35,12 +33,6 @@ namespace Arkanoid
             if(hits >= thickness)
             {
                 isAlive = false;
-                pictureBox.Visible = false;
-            }
-            else
-            {
-                object obj = GameForm.resourceManager.GetObject("crack" + (thickness-hits).ToString());
-                pictureBox.Image = (System.Drawing.Bitmap)obj;
             }
         }
     }
