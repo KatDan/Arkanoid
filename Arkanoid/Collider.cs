@@ -56,18 +56,18 @@ namespace Arkanoid
             row = -1;
             column = -1;
 
-            if (ball.y - ball.radius > panelBounds.Y + game.levelBrickMap.Count * game.brickHeight) return false;
+            if (ball.y - ball.radius > game.levelBrickMap.Count * game.brickHeight) return false;
 
             double innerSquareMinX = ball.x - ball.radius * Math.Cos(Math.PI / 4);
             double innerSquareMaxX = ball.x + ball.radius * Math.Cos(Math.PI / 4);
             double innerSquareMinY = ball.y - ball.radius * Math.Cos(Math.PI / 4);
             double innerSquareMaxY = ball.y + ball.radius * Math.Cos(Math.PI / 4);
 
-            int minRow = ((int)(innerSquareMinY - panelBounds.Y - 1) / game.brickHeight);
+            int minRow = ((int)(innerSquareMinY - 1) / game.brickHeight);
             if (minRow < 0) minRow = 0;
             if (minRow >= game.levelBrickMap.Count) minRow = game.levelBrickMap.Count - 1;
 
-            int maxRow = ((int)(innerSquareMaxY - panelBounds.Y + 1) / game.brickHeight);
+            int maxRow = ((int)(innerSquareMaxY + 1) / game.brickHeight);
             if (maxRow < 0) maxRow = 0;
             if (maxRow >= game.levelBrickMap.Count) maxRow = game.levelBrickMap.Count - 1;
 
@@ -165,7 +165,7 @@ namespace Arkanoid
 
         public bool ballHitsUpperBound(Ball ball)
         {
-            return ball.y - ball.radius - 1 <= panelBounds.Y;
+            return ball.y - ball.radius - 1 <= 0;
         }
 
         public bool ballHitsPaddle(Ball ball, Paddle paddle)
@@ -174,6 +174,13 @@ namespace Arkanoid
                 && ball.y < paddle.y - paddle.Height / 2
                 && ball.x + ball.radius >= paddle.x - paddle.Width / 2
                 && ball.x - ball.radius <= paddle.x + paddle.Width / 2);
+        }
+
+        public bool paddleHitsPowerUp(Paddle paddle, PowerUp powerUp)
+        {
+            return paddle.y - paddle.Height / 2 <= powerUp.y + powerUp.radius
+                    && paddle.x - paddle.Width / 2 <= powerUp.x
+                    && paddle.x + paddle.Width / 2 >= powerUp.x;
         }
     }
 }

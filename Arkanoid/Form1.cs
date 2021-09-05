@@ -36,8 +36,9 @@ namespace Arkanoid
         Game game;
 
         PaddleUI paddleUI;
-        List<BallUI> ballsUI;
+        BallUI[] ballsUI;
         BrickMapUI brickMapUI;
+        PowerUpUI powerUpUI;
         
         public GameForm()
         {
@@ -53,7 +54,7 @@ namespace Arkanoid
         {
             panel = new Panel
             {
-                Size = new Size(640, 480),
+                Size = new Size(640, 470),
                 Location = new Point(0, 50),
                 BackColor = Color.Black,
             };
@@ -66,7 +67,7 @@ namespace Arkanoid
 
             initializeHearts();
 
-
+            initializePowerUpUI();
             initializePaddleUI();
             initializeBallUI();
             initializeBrickMapUI();
@@ -94,19 +95,23 @@ namespace Arkanoid
         private void initializePaddleUI()
         {
             paddleUI = new PaddleUI(panel, game.paddle);
-            Controls.Add(paddleUI.pictureBox);
+            panel.Controls.Add(paddleUI.pictureBox);
             paddleUI.pictureBox.BringToFront();
+            //paddleUI.pictureBox.Parent = panel;
         }
 
         //ok
         private void initializeBallUI()
         {
-            ballsUI = new List<BallUI>();
-            foreach(Ball ball in game.balls)
+            ballsUI = new BallUI[game.maxBallsCount];
+            for(int i = 0; i < game.balls.Length; i++)
             {
-                BallUI ballUI = new BallUI(panel, ball, game.paddle);
-                Controls.Add(ballUI.pictureBox);
-                ballsUI.Add(ballUI);
+                Ball ball = game.balls[i];
+                if (ball == null) continue;
+
+                BallUI ballUI = new BallUI(panel, ball);
+                panel.Controls.Add(ballUI.pictureBox);
+                ballsUI[i] = ballUI;
                 ballUI.pictureBox.BringToFront();
             }
         }
@@ -118,6 +123,22 @@ namespace Arkanoid
             AddBrickMapUIToControls();
         }
 
+        private void initializePowerUpUI()
+        {
+            if (game.powerUp == null) return;
+
+            powerUpUI = new PowerUpUI(panel, game.powerUp);
+            panel.Controls.Add(powerUpUI.pictureBox);
+            powerUpUI.pictureBox.BringToFront();
+        }
+
+        private void clearPowerUpUI()
+        {
+            if (powerUpUI == null) return;
+            panel.Controls.Remove(powerUpUI.pictureBox);
+            powerUpUI = null;
+        }
+
         private void AddBrickMapUIToControls()
         {
             for (int line = 0; line < brickMapUI.bricksPicBoxes.Count; line++)
@@ -125,7 +146,9 @@ namespace Arkanoid
                 for (int column = 0; column < brickMapUI.bricksPicBoxes[0].Count; column++)
                 {
                     PictureBox pBox = brickMapUI.bricksPicBoxes[line][column];
-                    Controls.Add(pBox);
+                    if (pBox == null) continue;
+
+                    panel.Controls.Add(pBox);
                     pBox.BringToFront();
                 }
             }
@@ -138,7 +161,7 @@ namespace Arkanoid
                 for (int column = 0; column < brickMapUI.bricksPicBoxes[0].Count; column++)
                 {
                     PictureBox pBox = brickMapUI.bricksPicBoxes[line][column];
-                    Controls.Remove(pBox);
+                    panel.Controls.Remove(pBox);
                 }
             }
             brickMapUI.bricksPicBoxes.Clear();
@@ -186,11 +209,18 @@ namespace Arkanoid
                     case EventManager.GameStopper.GAMEOVER:
                         showInfoLabel("Game Over");
                         updateHearts();
-                        paddleUI.updatePosition();
+                        updateLevelLabel();
+                        updateScoreLabel();
                         clearBrickMapUI();
                         brickMapUI.updatePicBoxes(game);
                         AddBrickMapUIToControls();
+                        game.eventManager.reset();
                         break;
+                    case EventManager.GameStopper.WIN:
+                        updateScoreLabel();
+                        showInfoLabel("YOU WON!\n\nFINAL SCORE:" + game.score.ToString());
+                        timer.Stop();
+                        return;
                 }
             }
             if(game.eventManager.brickHit == true)
@@ -199,10 +229,54 @@ namespace Arkanoid
                 updateScoreLabel();
             }
             paddleUI.updatePosition();
-            foreach(BallUI ballUI in ballsUI)
+            
+            for(int i = 0; i < ballsUI.Length; i++)
             {
-                ballUI.updatePosition();
+                BallUI ballUI = ballsUI[i];
+
+                //some change has occured
+                if((ballUI == null && game.balls[i] != null) | (ballUI != null && !ReferenceEquals(ballUI.ball, game.balls[i])))
+                {
+                    //ballUI no longer represents alive ball
+                    if(ballUI != null && game.balls[i] == null)
+                    {
+                        panel.Controls.Remove(ballUI.pictureBox);
+                        ballsUI[i] = null;
+                        continue;
+                    }
+                    //ballUI needs to create a UI for new ball
+                    if(ballUI == null && game.balls[i] != null)
+                    {
+                        ballsUI[i] = new BallUI(panel, game.balls[i]);
+                        panel.Controls.Add(ballsUI[i].pictureBox);
+                    }
+                    //a change has occured in the order of the balls and the UI needs to be refreshed
+                    if(ballUI != null && !ReferenceEquals(ballUI.ball, game.balls[i]))
+                    {
+                        ballsUI[i].ball = game.balls[i];
+                    }
+                    
+                }
+                
+                if(ballUI != null) ballUI.updatePosition();
             }
+            if (game.powerUpPresent)
+            {
+                if (powerUpUI == null) powerUpUI = new PowerUpUI(panel, game.powerUp);
+                if (game.eventManager.powerupState == EventManager.PowerUpState.EXISTS
+                    || game.eventManager.powerupState == EventManager.PowerUpState.FALLING)
+                {
+                    powerUpUI.pictureBox.Visible = true;
+                }
+                else if(game.eventManager.powerupState == EventManager.PowerUpState.TAKEN
+                    || game.eventManager.powerupState == EventManager.PowerUpState.NONE)
+                {
+                    powerUpUI.pictureBox.Visible = false;
+                }
+                
+                powerUpUI.updatePosition();
+            }
+            else clearPowerUpUI();
             game.eventManager.reset();
         }
 
@@ -213,7 +287,7 @@ namespace Arkanoid
             infoLabel.Text = text;
             foreach(BallUI ballUI in ballsUI)
             {
-                ballUI.pictureBox.BringToFront();
+                if(ballUI != null) ballUI.pictureBox.BringToFront();
             }
         }
 
@@ -265,9 +339,42 @@ namespace Arkanoid
             {
                 infoLabel.Visible = false;
                 if (game.paddle.holdsBall) game.paddle.holdsBall = false;
-                timer.Start();
+                if(game.eventManager.gameStopper != EventManager.GameStopper.WIN) timer.Start();
             }
+            
         }
 
+        private void GameForm_PreviewKeyDown(object sender, PreviewKeyDownEventArgs e)
+        {
+            /*if(e.KeyData == Keys.Right || e.KeyData == Keys.Left)
+            {
+                e.IsInputKey = true;
+            }*/
+
+            if (e.KeyData == Keys.Right)
+            {
+                if (game.paddle.x + game.paddle.Width / 2 >= Width - 18) return;
+
+                game.paddle.x += game.paddle.speed;
+                if (game.paddle.holdsBall)
+                {
+                    game.balls[0].x += game.paddle.speed;
+                    ballsUI[0].updatePosition();
+                }
+                paddleUI.updatePosition();
+            }
+            else if (e.KeyData == Keys.Left)
+            {
+                if (game.paddle.x - game.paddle.Width / 2 <= 1) return;
+
+                game.paddle.x -= game.paddle.speed;
+                if (game.paddle.holdsBall)
+                {
+                    game.balls[0].x -= game.paddle.speed;
+                    ballsUI[0].updatePosition();
+                }
+                paddleUI.updatePosition();
+            }
+        }
     }
 }

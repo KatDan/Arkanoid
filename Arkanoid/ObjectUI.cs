@@ -15,9 +15,9 @@ namespace Arkanoid
 
     public class BallUI : ObjectUI
     {
-        Ball ball;
+        internal Ball ball;
 
-        public BallUI(Panel panel, Ball ball, Paddle paddle)
+        public BallUI(Panel panel, Ball ball)
         {
             this.ball = ball;
             this.pictureBox = new PictureBox
@@ -38,6 +38,7 @@ namespace Arkanoid
             }
             pictureBox.Location = new Point((int)ball.x - ball.radius,
                 (int)ball.y - ball.radius);
+            pictureBox.Visible = true;
         }
     }
 
@@ -50,11 +51,11 @@ namespace Arkanoid
             this.paddle = paddle;
             this.pictureBox = new PictureBox
             {
+                Parent = panel,
                 Size = new Size(paddle.Width, paddle.Height),
                 Location = new Point(paddle.x - paddle.Width / 2, paddle.y - paddle.Height/2),
                 Image = Properties.Resources.paddle,
-                SizeMode = PictureBoxSizeMode.StretchImage,
-                Parent = panel
+                SizeMode = PictureBoxSizeMode.StretchImage
             };
         }
 
@@ -72,9 +73,57 @@ namespace Arkanoid
     {
         PowerUp powerUp;
 
+        private int animationState = 0;
+        private int animationSteps = 30;
+
+        public PowerUpUI(Panel panel, PowerUp powerUp)
+        {
+            this.powerUp = powerUp;
+            pictureBox = new PictureBox
+            {
+                Size = new Size(powerUp.radius*2, powerUp.radius*2),
+                Location = new Point(powerUp.x - powerUp.radius, powerUp.y - powerUp.radius),
+                SizeMode = PictureBoxSizeMode.StretchImage,
+                Parent = panel
+            };
+            switch (powerUp.type)
+            {
+                case PowerUpType.SLOWBALL:
+                    pictureBox.Image = Properties.Resources.slowball;
+                    break;
+                case PowerUpType.FASTBALL:
+                    pictureBox.Image = Properties.Resources.fastball;
+                    break;
+                case PowerUpType.SUPERBALL:
+                    pictureBox.Image = Properties.Resources.superball;
+                    break;
+                case PowerUpType.TRIPLEBALL:
+                    pictureBox.Image = Properties.Resources.tripleball;
+                    break;
+            }
+            pictureBox.Visible = true;
+        }
+
         public void updatePosition()
         {
-
+            if(powerUp == null)
+            {
+                pictureBox.Visible = false;
+                return;
+            }
+            if(animationState < animationSteps/2 && animationState % 3 == 0)
+            {
+                pictureBox.Size = new Size(pictureBox.Width + 2, pictureBox.Height + 2);
+                pictureBox.Location = new Point(powerUp.x - powerUp.radius - 1, powerUp.y - powerUp.radius - 1);
+            }
+            else if(animationState >= animationSteps / 2 && animationState % 3 == 1)
+            {
+                pictureBox.Size = new Size(pictureBox.Width - 2, pictureBox.Height - 2);
+                pictureBox.Location = new Point(powerUp.x - powerUp.radius + 1, powerUp.y - powerUp.radius + 1);
+            }
+            pictureBox.Refresh();
+            animationState++;
+            animationState = animationState % animationSteps;
         }
     }
 
@@ -83,13 +132,14 @@ namespace Arkanoid
         internal List<List<Brick>> brickMap;
         internal List<List<PictureBox>> bricksPicBoxes;
         private ResourceManager resourceManager;
-        Coords recentlyHitBrick;
+        Coords[] recentlyHitBricks;
         Panel panel;
 
         public BrickMapUI(Panel panel, ResourceManager resourceManager, Game game)
         {
             this.resourceManager = resourceManager;
-            this.recentlyHitBrick = game.recentlyHitBrick;
+            this.recentlyHitBricks = new Coords[game.maxBallsCount];
+            this.recentlyHitBricks = game.recentlyHitBricks;
             this.panel = panel;
             brickMap = game.levelBrickMap;
             bricksPicBoxes = new List<List<PictureBox>>();
@@ -106,11 +156,15 @@ namespace Arkanoid
                 for (int column = 0; column < brickMap[line].Count; column++)
                 {
                     Brick brick = brickMap[line][column];
+                    if(brick == null){
+                        brickLine.Add(null);
+                        continue;
+                    }
                     PictureBox brickPictureBox = new PictureBox
                     {
                         Parent = panel,
                         Size = new Size(game.brickWidth, game.brickHeight),
-                        Location = new Point(column * game.brickWidth, panel.Location.Y + line * game.brickHeight),
+                        Location = new Point(column * game.brickWidth, line * game.brickHeight),
                         Image = null,
                         BackgroundImageLayout = ImageLayout.Stretch,
                         SizeMode = PictureBoxSizeMode.StretchImage
@@ -125,20 +179,23 @@ namespace Arkanoid
 
         public void update()
         {
-            if (recentlyHitBrick == null || recentlyHitBrick.row == -1 || recentlyHitBrick.column == -1) return;
-            else
+            for(int index = 0; index < recentlyHitBricks.Length; index++)
             {
-                PictureBox recentBrick = bricksPicBoxes[recentlyHitBrick.row][recentlyHitBrick.column];
-                
-                Brick brick = brickMap[recentlyHitBrick.row][recentlyHitBrick.column];
-                if (!brick.isAlive)
+                if (recentlyHitBricks[index] == null || recentlyHitBricks[index].row == -1 || recentlyHitBricks[index].column == -1) continue;
+                else
                 {
-                    recentBrick.Visible = false;
-                    return;
+                    PictureBox recentBrick = bricksPicBoxes[recentlyHitBricks[index].row][recentlyHitBricks[index].column];
+
+                    Brick brick = brickMap[recentlyHitBricks[index].row][recentlyHitBricks[index].column];
+                    if (!brick.isAlive)
+                    {
+                        recentBrick.Visible = false;
+                        return;
+                    }
+
+                    object obj = resourceManager.GetObject("crack" + (brick.thickness - brick.Hits).ToString());
+                    recentBrick.Image = (System.Drawing.Bitmap)obj;
                 }
-                
-                object obj = resourceManager.GetObject("crack" + (brick.thickness - brick.Hits).ToString());
-                recentBrick.Image = (System.Drawing.Bitmap)obj;
             }
         }
     }

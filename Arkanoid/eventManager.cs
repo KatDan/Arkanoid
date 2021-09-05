@@ -13,7 +13,8 @@ namespace Arkanoid
             NONE = 0,
             LEVELUP = 1,
             LIFEDOWN = 2,
-            GAMEOVER = 3
+            GAMEOVER = 3,
+            WIN = 4
         };
 
         internal GameStopper gameStopper = GameStopper.NONE;
@@ -24,6 +25,7 @@ namespace Arkanoid
         {
             NONE,
             EXISTS,
+            FALLING,
             TAKEN
         };
 

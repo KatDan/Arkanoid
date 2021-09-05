@@ -173,6 +173,16 @@ namespace Arkanoid.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap fastball {
+            get {
+                object obj = ResourceManager.GetObject("fastball", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap heart {
             get {
                 object obj = ResourceManager.GetObject("heart", resourceCulture);
@@ -186,6 +196,36 @@ namespace Arkanoid.Properties {
         internal static System.Drawing.Bitmap paddle {
             get {
                 object obj = ResourceManager.GetObject("paddle", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap slowball {
+            get {
+                object obj = ResourceManager.GetObject("slowball", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap superball {
+            get {
+                object obj = ResourceManager.GetObject("superball", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap tripleball {
+            get {
+                object obj = ResourceManager.GetObject("tripleball", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

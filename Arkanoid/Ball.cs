@@ -13,6 +13,7 @@ namespace Arkanoid
         internal double y;
 
         internal int speed = 3;
+        internal int originalSpeed = 3;
 
         private double speedX;
         private double speedY;
@@ -49,7 +50,8 @@ namespace Arkanoid
                 }
             }
         }
-        
+
+        internal int originalRadius;
         internal int radius;
 
         Random random = new Random();
@@ -57,6 +59,7 @@ namespace Arkanoid
         public Ball(int radius, Paddle paddle)
         {
             this.radius = radius;
+            originalRadius = radius;
             this.x = paddle.x;
             this.y = paddle.y - paddle.Height/2 - radius;
             
@@ -64,10 +67,33 @@ namespace Arkanoid
             Angle = angleDeg * Math.PI / 180;
         }
 
+        public Ball copy()
+        {
+            return (Ball)this.MemberwiseClone();
+        }
+
         public void move()
         {
             x = x + speedX;
             y = y - speedY;
+        }
+
+        public void resize(int newRadius)
+        {
+            radius = newRadius;
+        }
+
+        public void resetAttributes()
+        {
+            radius = originalRadius;
+            changeSpeed(originalSpeed);
+        }
+
+        public void changeSpeed(int newSpeed)
+        {
+            speed = newSpeed;
+            speedX = Math.Cos(angle) * speed;
+            speedY = Math.Sin(angle) * speed;
         }
 
     }

@@ -18,7 +18,10 @@ namespace Arkanoid
         internal bool holdsBall;
 
         private int height;
+
+        private int originalWidth;
         private int width;
+
 
         internal int speed = 10;
 
@@ -30,6 +33,7 @@ namespace Arkanoid
         public Paddle(int centerX, int centerY, int width, int height) {
             this.height = height;
             this.width = width;
+            originalWidth = width;
             x = centerX;
             y = centerY;
             internalCurvatureRadius = 3*width;
@@ -38,6 +42,11 @@ namespace Arkanoid
         public void resize(int newWidth)
         {
             width = newWidth;
+        }
+
+        public void resetAttributes()
+        {
+            width = originalWidth;
         }
 
     }
