@@ -21,3 +21,22 @@ If there are no lives left, the game is over.
 
 
 ## Developer documentation
+The project is divided into 3 logical parts:
+ - the form - visualization and player input processing
+ - the objects' UI - each main object in the game has its own UI manager class
+ - the game logic - movement of the objects, resolution of objects' collisions etc.
+
+### GameForm
+This class is in _Form1.cs_.
+It represents the UI of the game as a whole
+and handles keyboard inputs.
+
+Important methods:
+ - updating methods:
+   - `updateScoreLabel()`
+   - `updateLevelLabel()`
+   - `updateHearts()`
+ - `tick()` - tick of a timer. It calls Game.gameTick(), processes its results and updates the UI accordingly
+ - input processing methods:
+   - `keyIsDown(object sender, KeyEventArgs e)`
+   - `keyIsPressed(object sender, KeyEventArgs e)`
