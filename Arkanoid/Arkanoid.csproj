@@ -22,6 +22,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <DocumentationFile>bin\Debug\Arkanoid.xml</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -78,6 +79,10 @@
     </Compile>
     <None Include="bin\Debug\level1.csv" />
     <None Include="bin\Debug\level2.csv" />
+    <None Include="bin\Debug\level3.csv" />
+    <EmbeddedResource Include="level1.csv" />
+    <EmbeddedResource Include="level2.csv" />
+    <EmbeddedResource Include="level3.csv" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>

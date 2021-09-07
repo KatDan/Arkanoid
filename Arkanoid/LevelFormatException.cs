@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace Arkanoid
 {
+    /// <summary>
+    /// An exception that is thrown when the file the brick maps are loaded from is in wrong format.
+    /// </summary>
     [Serializable]
     public class LevelFormatException : Exception
     {

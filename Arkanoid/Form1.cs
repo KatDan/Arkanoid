@@ -15,12 +15,19 @@ namespace Arkanoid
 {
     public partial class GameForm : Form
     {
+        /// <summary>
+        /// System.Windows.Forms.Panel instance that displays the game level.
+        /// </summary>
         internal Panel panel;
 
-        internal int brickUpperIndentation = 50;
-
+        /// <summary>
+        /// Manages resources in the project.
+        /// </summary>
         public static ResourceManager resourceManager = new ResourceManager("Arkanoid.Properties.Resources", typeof(Resources).Assembly);
 
+        /// <summary>
+        /// Label that contains information about the state of the game, e.g. game over, 2 lives left etc.
+        /// </summary>
         public Label infoLabel = new Label
         {
             Size = new Size(400, 100),
@@ -31,15 +38,36 @@ namespace Arkanoid
             TextAlign = ContentAlignment.MiddleCenter
         };
 
+        /// <summary>
+        /// Array of picture boxes displaying how many lives the player has left.
+        /// </summary>
         public PictureBox[] hearts;
 
+        /// <summary>
+        /// Arkanoid.Game instance that contains all the logic of the game.
+        /// </summary>
         Game game;
 
+        /// <summary>
+        /// Manages visualization of Arkanoid.Paddle instance.
+        /// </summary>
         PaddleUI paddleUI;
+        /// <summary>
+        /// Manages visualization of Arkanoid.Ball instances.
+        /// </summary>
         BallUI[] ballsUI;
+        /// <summary>
+        /// Manages visualization of the brick map in the level.
+        /// </summary>
         BrickMapUI brickMapUI;
+        /// <summary>
+        /// Manages visualization of Arkanoid.PowerUp instance.
+        /// </summary>
         PowerUpUI powerUpUI;
         
+        /// <summary>
+        /// Constructor that initializes Windows Form.
+        /// </summary>
         public GameForm()
         {
             InitializeComponent();
@@ -50,6 +78,10 @@ namespace Arkanoid
             initializeGame();
         }
 
+        /// <summary>
+        /// Creates Panel that will visualize the game and initializes all
+        /// the important components of the UI.
+        /// </summary>
         private void initializeGame()
         {
             panel = new Panel
@@ -73,7 +105,9 @@ namespace Arkanoid
             initializeBrickMapUI();
         }
 
-        //ok
+        /// <summary>
+        /// Initializes hearts that show how many lives the player has left.
+        /// </summary>
         public void initializeHearts()
         {
             hearts = new PictureBox[game.lives];
@@ -91,7 +125,9 @@ namespace Arkanoid
             }
         }
 
-        //ok
+        /// <summary>
+        /// Initializes PaddleUI and adds its PictureBox to Panel.Controls.
+        /// </summary>
         private void initializePaddleUI()
         {
             paddleUI = new PaddleUI(panel, game.paddle);
@@ -100,7 +136,9 @@ namespace Arkanoid
             //paddleUI.pictureBox.Parent = panel;
         }
 
-        //ok
+        /// <summary>
+        /// Initializes BallUI and adds its PictureBox to Panel.Controls.
+        /// </summary>
         private void initializeBallUI()
         {
             ballsUI = new BallUI[game.maxBallsCount];
@@ -116,13 +154,18 @@ namespace Arkanoid
             }
         }
 
-        //ok
+        /// <summary>
+        /// Initializes BrickMapUI and adds its PictureBoxes to Panel.Controls.
+        /// </summary>
         private void initializeBrickMapUI()
         {
             brickMapUI = new BrickMapUI(panel, resourceManager, game);
             AddBrickMapUIToControls();
         }
 
+        /// <summary>
+        /// Initializes PowerUpUI and adds its PictureBox to Panel.Controls.
+        /// </summary>
         private void initializePowerUpUI()
         {
             if (game.powerUp == null) return;
@@ -132,6 +175,10 @@ namespace Arkanoid
             powerUpUI.pictureBox.BringToFront();
         }
 
+
+        /// <summary>
+        /// Removes PictureBox representing PowerUp from Panel.Controls and clears PowerUpUI.
+        /// </summary>
         private void clearPowerUpUI()
         {
             if (powerUpUI == null) return;
@@ -139,6 +186,9 @@ namespace Arkanoid
             powerUpUI = null;
         }
 
+        /// <summary>
+        /// Adds PictureBoxes representing instances of Arkanoid.Brick in the brick map to Panel.Controls.
+        /// </summary>
         private void AddBrickMapUIToControls()
         {
             for (int line = 0; line < brickMapUI.bricksPicBoxes.Count; line++)
@@ -154,6 +204,9 @@ namespace Arkanoid
             }
         }
 
+        /// <summary>
+        /// Removes PictureBoxes representing Bricks from Panel.Controls and clears BrickMapUI.
+        /// </summary>
         private void clearBrickMapUI()
         {
             for (int line = 0; line < brickMapUI.bricksPicBoxes.Count; line++)
@@ -167,16 +220,25 @@ namespace Arkanoid
             brickMapUI.bricksPicBoxes.Clear();
         }
 
+        /// <summary>
+        /// Updates score label.
+        /// </summary>
         private void updateScoreLabel()
         {
             scoreLabel.Text = String.Format("score: {0:D6}", game.score);
         }
 
+        /// <summary>
+        /// Updates level label.
+        /// </summary>
         private void updateLevelLabel()
         {
             levelLabel.Text = "level: " + game.level.ToString();
         }
 
+        /// <summary>
+        /// Updates the number of hearts according to player's lives left.
+        /// </summary>
         private void updateHearts()
         {
             for(int i = 0; i < hearts.Length; i++)
@@ -186,14 +248,22 @@ namespace Arkanoid
             }
         }
 
+        /// <summary>
+        /// Tick of Timer
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void tick(object sender, EventArgs e)
         {
+            // tick in Game
             game.gameTick();
+            // if there is reason to stop the game, stop the game
             if(game.eventManager.gameStopper != EventManager.GameStopper.NONE)
             {
                 timer.Stop();
                 switch (game.eventManager.gameStopper)
                 {
+                    // level up
                     case EventManager.GameStopper.LEVELUP:
                         showInfoLabel("level " + game.level.ToString());
                         updateLevelLabel();
@@ -201,11 +271,13 @@ namespace Arkanoid
                         brickMapUI.updatePicBoxes(game);
                         AddBrickMapUIToControls();
                         break;
+                    // life down
                     case EventManager.GameStopper.LIFEDOWN:
                         updateHearts();
                         showInfoLabel(game.lives.ToString() + (game.lives == 1 ? " life left" : " lives left"));
                         updateScoreLabel();
                         break;
+                    // game over
                     case EventManager.GameStopper.GAMEOVER:
                         showInfoLabel("Game Over");
                         updateHearts();
@@ -216,6 +288,7 @@ namespace Arkanoid
                         AddBrickMapUIToControls();
                         game.eventManager.reset();
                         break;
+                    // win!
                     case EventManager.GameStopper.WIN:
                         updateScoreLabel();
                         showInfoLabel("YOU WON!\n\nFINAL SCORE:" + game.score.ToString());
@@ -223,18 +296,20 @@ namespace Arkanoid
                         return;
                 }
             }
+            // if brick was hit in gameTick, update BrickMapUI
             if(game.eventManager.brickHit == true)
             {
                 brickMapUI.update();
                 updateScoreLabel();
             }
+            
             paddleUI.updatePosition();
             
             for(int i = 0; i < ballsUI.Length; i++)
             {
                 BallUI ballUI = ballsUI[i];
 
-                //some change has occured
+                //some change in number of balls has occured
                 if((ballUI == null && game.balls[i] != null) | (ballUI != null && !ReferenceEquals(ballUI.ball, game.balls[i])))
                 {
                     //ballUI no longer represents alive ball
@@ -250,7 +325,7 @@ namespace Arkanoid
                         ballsUI[i] = new BallUI(panel, game.balls[i]);
                         panel.Controls.Add(ballsUI[i].pictureBox);
                     }
-                    //a change has occured in the order of the balls and the UI needs to be refreshed
+                    // a change has occured in the order of the balls and the UI needs to be refreshed
                     if(ballUI != null && !ReferenceEquals(ballUI.ball, game.balls[i]))
                     {
                         ballsUI[i].ball = game.balls[i];
@@ -260,6 +335,7 @@ namespace Arkanoid
                 
                 if(ballUI != null) ballUI.updatePosition();
             }
+            // managing power ups
             if (game.powerUpPresent)
             {
                 if (powerUpUI == null) powerUpUI = new PowerUpUI(panel, game.powerUp);
@@ -277,9 +353,14 @@ namespace Arkanoid
                 powerUpUI.updatePosition();
             }
             else clearPowerUpUI();
+            // resets eventManager from previous gameTick
             game.eventManager.reset();
         }
 
+        /// <summary>
+        /// Displays given text in central infoLabel.
+        /// </summary>
+        /// <param name="text">Text to be displayed.</param>
         private void showInfoLabel(string text)
         {
             infoLabel.Visible = true;
@@ -291,6 +372,11 @@ namespace Arkanoid
             }
         }
 
+        /// <summary>
+        /// Manages keyboard events when the key is down.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void keyIsDown(object sender, KeyEventArgs e)
         {
             if(e.KeyData == Keys.Right)
@@ -320,6 +406,11 @@ namespace Arkanoid
             
         }
 
+        /// <summary>
+        /// Manages keyboard events when the key is pressed.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void keyIsPressed(object sender, KeyPressEventArgs e)
         {
             if(e.KeyChar == 'p' || e.KeyChar == 'P')
@@ -342,39 +433,6 @@ namespace Arkanoid
                 if(game.eventManager.gameStopper != EventManager.GameStopper.WIN) timer.Start();
             }
             
-        }
-
-        private void GameForm_PreviewKeyDown(object sender, PreviewKeyDownEventArgs e)
-        {
-            /*if(e.KeyData == Keys.Right || e.KeyData == Keys.Left)
-            {
-                e.IsInputKey = true;
-            }*/
-
-            if (e.KeyData == Keys.Right)
-            {
-                if (game.paddle.x + game.paddle.Width / 2 >= Width - 18) return;
-
-                game.paddle.x += game.paddle.speed;
-                if (game.paddle.holdsBall)
-                {
-                    game.balls[0].x += game.paddle.speed;
-                    ballsUI[0].updatePosition();
-                }
-                paddleUI.updatePosition();
-            }
-            else if (e.KeyData == Keys.Left)
-            {
-                if (game.paddle.x - game.paddle.Width / 2 <= 1) return;
-
-                game.paddle.x -= game.paddle.speed;
-                if (game.paddle.holdsBall)
-                {
-                    game.balls[0].x -= game.paddle.speed;
-                    ballsUI[0].updatePosition();
-                }
-                paddleUI.updatePosition();
-            }
         }
     }
 }

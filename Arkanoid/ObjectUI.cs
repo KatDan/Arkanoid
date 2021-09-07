@@ -6,17 +6,37 @@ using System.Windows.Forms;
 
 namespace Arkanoid
 {
+    /// <summary>
+    /// An abstract class for the interfaces between the UI and the objects in a game.
+    /// </summary>
     public abstract class ObjectUI
     {
+        /// <summary>
+        /// A System.Windows.Forms.PictureBox instance that visualizes the object from the game.
+        /// </summary>
         internal PictureBox pictureBox;
 
+        /// <summary>
+        /// Updates the position of pictureBox when the position of represented object has changed.
+        /// </summary>
         void updatePosition() { }
     }
 
+    /// <summary>
+    /// A class that visualizes Arkanoid.Ball in the UI.
+    /// </summary>
     public class BallUI : ObjectUI
     {
+        /// <summary>
+        /// Arkanoid.Ball object that is represented by pictureBox in the UI.
+        /// </summary>
         internal Ball ball;
 
+        /// <summary>
+        /// A constructor that sets pictureBox properties before adding it to Controls.
+        /// </summary>
+        /// <param name="panel"> System.Windows.Forms.Panel that is used as the UI of the game.</param>
+        /// <param name="ball">Arkanoid.Ball object needed to be represented in the UI.</param>
         public BallUI(Panel panel, Ball ball)
         {
             this.ball = ball;
@@ -42,10 +62,21 @@ namespace Arkanoid
         }
     }
 
+    /// <summary>
+    /// A class that visualizes Arkanoid.Paddle in the UI.
+    /// </summary>
     public class PaddleUI : ObjectUI
     {
+        /// <summary>
+        /// Arkanoid.Paddle object that is represented by pictureBox in the UI.
+        /// </summary>
         Paddle paddle;
 
+        /// <summary>
+        /// A constructor that sets pictureBox properties before adding it to Controls.
+        /// </summary>
+        /// <param name="panel"> System.Windows.Forms.Panel that is used as the UI of the game.</param>
+        /// <param name="paddle">Arkanoid.Paddle object needed to be represented in the UI.</param>
         public PaddleUI(Panel panel, Paddle paddle)
         {
             this.paddle = paddle;
@@ -69,13 +100,30 @@ namespace Arkanoid
         }
     }
 
+    /// <summary>
+    /// A class that visualizes Arkanoid.Ball in the UI.
+    /// </summary>
     public class PowerUpUI : ObjectUI
     {
+        /// <summary>
+        /// Arkanoid.PowerUp object that is represented by pictureBox in the UI.
+        /// </summary>
         PowerUp powerUp;
 
+        /// <summary>
+        /// A state of the twinkling animation of power up.
+        /// </summary>
         private int animationState = 0;
+        /// <summary>
+        /// Number of states of the twinkling animation of power up.
+        /// </summary>
         private int animationSteps = 30;
 
+        /// <summary>
+        /// A constructor that sets pictureBox properties before adding it to Controls.
+        /// </summary>
+        /// <param name="panel"> System.Windows.Forms.Panel that is used as the UI of the game.</param>
+        /// <param name="powerUp">Arkanoid.PowerUp object needed to be represented in the UI.</param>
         public PowerUpUI(Panel panel, PowerUp powerUp)
         {
             this.powerUp = powerUp;
@@ -127,14 +175,41 @@ namespace Arkanoid
         }
     }
 
+    /// <summary>
+    /// A class that visualizes levels' brick map in the UI.
+    /// </summary>
     public class BrickMapUI
     {
+        /// <summary>
+        /// 2D list of bricks that are set in the current level.
+        /// </summary>
         internal List<List<Brick>> brickMap;
+        /// <summary>
+        /// 2D list of picture boxes that visualize the bricks from brickMap
+        /// </summary>
         internal List<List<PictureBox>> bricksPicBoxes;
+        /// <summary>
+        /// System.Resources.ResourceManager that manages resources for this project.
+        /// It is used when the brick is hit and its front image needs to be changed 
+        /// into one of the crack types from resources.
+        /// </summary>
         private ResourceManager resourceManager;
+        /// <summary>
+        /// Array of bricks that were recently hit by the existing balls.
+        /// </summary>
         Coords[] recentlyHitBricks;
+        /// <summary>
+        /// Panel used as the UI.
+        /// </summary>
         Panel panel;
 
+        /// <summary>
+        /// A constructor that initializes 2D list of picture boxes representing
+        /// individual bricks of brickMap.
+        /// </summary>
+        /// <param name="panel">System.Windows.Forms.Panel used as the UI.</param>
+        /// <param name="resourceManager">System.Resources.ResourceManager that manages resources for this project.</param>
+        /// <param name="game">Arkanoid.Game that needs to be visualized in the UI.</param>
         public BrickMapUI(Panel panel, ResourceManager resourceManager, Game game)
         {
             this.resourceManager = resourceManager;
@@ -146,6 +221,11 @@ namespace Arkanoid
             updatePicBoxes(game);
         }
 
+        /// <summary>
+        /// Sets the new PictureBox array when level of the game is changed, 
+        /// so it represents current brick map of the level.
+        /// </summary>
+        /// <param name="game">Arkanoid.Game that is visualized in the UI.</param>
         public void updatePicBoxes(Game game)
         {
             brickMap = game.levelBrickMap;
@@ -170,13 +250,16 @@ namespace Arkanoid
                         SizeMode = PictureBoxSizeMode.StretchImage
                     };
                     object obj = resourceManager.GetObject("brick" + brick.thickness.ToString());
-                    brickPictureBox.BackgroundImage = (System.Drawing.Bitmap)obj;
+                    brickPictureBox.BackgroundImage = (Bitmap)obj;
                     brickLine.Add(brickPictureBox);
                 }
                 bricksPicBoxes.Add(brickLine);
             }
         }
 
+        /// <summary>
+        /// Updates pictureBoxes of particular bricks that were listed in recentlyHitBricks as hit the most recently.
+        /// </summary>
         public void update()
         {
             for(int index = 0; index < recentlyHitBricks.Length; index++)
@@ -192,7 +275,6 @@ namespace Arkanoid
                         recentBrick.Visible = false;
                         return;
                     }
-
                     object obj = resourceManager.GetObject("crack" + (brick.thickness - brick.Hits).ToString());
                     recentBrick.Image = (System.Drawing.Bitmap)obj;
                 }

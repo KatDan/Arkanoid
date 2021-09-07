@@ -81,7 +81,6 @@ namespace Arkanoid
             this.Text = "Arkanoid";
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.keyIsDown);
             this.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.keyIsPressed);
-            this.PreviewKeyDown += new System.Windows.Forms.PreviewKeyDownEventHandler(this.GameForm_PreviewKeyDown);
             this.ResumeLayout(false);
             this.PerformLayout();
 
