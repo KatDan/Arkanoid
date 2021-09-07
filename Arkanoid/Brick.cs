@@ -40,7 +40,7 @@ namespace Arkanoid
         public int Score { get => score; }
 
         /// <summary>
-        /// A flag that is true if hits < thickness;
+        /// A flag that is true if hits is less than thickness;
         /// and false if hits == thickness, thus the brick is destroyed.
         /// </summary>
         internal bool isAlive = true;
