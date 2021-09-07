@@ -92,7 +92,8 @@ It is defined by position of its center, size, thickness (how many hits are need
 #### PowerUp
 This class represents a power up. It is defined by its radius, position of the center, speed of falling down, visibility state and the type.
 
-Visibility state describes whether the power up is visible and twinkling without moving, or whether it is falling down.
+Visibility state describes whether the power up is visible and twinkling without moving, or whether it is falling down. 
+IT is represented by `bool isFalling` and `int sleepTime`.
 
 Type of a power up is one of the values from `enum PowerUpType`, that determines what special behavior will be activated after paddle catching the power up.
 
@@ -100,15 +101,17 @@ Type of a power up is one of the values from `enum PowerUpType`, that determines
 This class connects all the logical components of the game, including instances of `Paddle`, `Ball`, `PowerUp`, 2D array of `Brick`s (brick map) of the level, score of the player, number of the player's remaining lives, etc.
 
 Important component of this class is an instance of class `Collider`, that detects the collisions of the objects (usually the ball and another object). When the collision is detected, this class changes the angle of the ball so it bounces nicely.
+It contains methods for checking for the collisions between ball and paddle, brick, walls and upper bound of the panel. 
 
+The most impotant part of this class is method `gameTick()`.
+Each tick the objects' positions and properties are updated important information is passed to the GUI via `EventManager` instance that is common for both `Game` and `GameForm` classes.
+
+#### EventManager
 For communication between the GUI and the internal logic of the game is class `EventManager`. If the game needs to be stopped (level up, life down, game over), it enables `GameForm` to react.
 
 It contains `bool brickHit` that is set to `true` if any brick was hit in the last gameTick.
 
 It also contains information about the state of a power up (whether it exits, twinkles, falls down or is caught).
-
-The most impotant part of this class is method `gameTick()`.
-Each tick the objects' positions and properties are updated important information is passed to the GUI via `EventManager` instance that is common for both `Game` and `GameForm` classes.
 
 
 
