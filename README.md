@@ -4,7 +4,7 @@ Semestral program for C# programming in 2020/2021
 ## User documentation
 
 The goal of this game is to survive all the levels. Using a paddle, the player ejects a ball or reflects it 
-to destroy all the bricks above in the current level.
+to destroy all the bricks above in current level.
 Each type of brick needs to be hit a certain amount of times before it is destroyed.
 If there are no bricks left, the level is completed and player proceeds to a more difficult level.
 The game currently contains 3 levels.
