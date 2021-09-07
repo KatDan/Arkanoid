@@ -1,6 +1,8 @@
 # Arkanoid
 Semestral program for C# programming in 2020/2021 
 
+![alt text](https://github.com/KatDan/Arkanoid/blob/master/Arkanoid/image.png?raw=true)
+
 ## User documentation
 
 The goal of this game is to survive all the levels. Using a paddle, the player ejects a ball or reflects it 
