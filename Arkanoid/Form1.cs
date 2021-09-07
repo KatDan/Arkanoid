@@ -13,6 +13,9 @@ using System.Windows.Forms;
 
 namespace Arkanoid
 {
+    /// <summary>
+    /// A class for managing Form
+    /// </summary>
     public partial class GameForm : Form
     {
         /// <summary>
@@ -51,19 +54,19 @@ namespace Arkanoid
         /// <summary>
         /// Manages visualization of Arkanoid.Paddle instance.
         /// </summary>
-        PaddleUI paddleUI;
+        PaddleGUI paddleGUI;
         /// <summary>
         /// Manages visualization of Arkanoid.Ball instances.
         /// </summary>
-        BallUI[] ballsUI;
+        BallGUI[] ballsGUI;
         /// <summary>
         /// Manages visualization of the brick map in the level.
         /// </summary>
-        BrickMapUI brickMapUI;
+        BrickMapGUI brickMapGUI;
         /// <summary>
         /// Manages visualization of Arkanoid.PowerUp instance.
         /// </summary>
-        PowerUpUI powerUpUI;
+        PowerUpGUI powerUpGUI;
         
         /// <summary>
         /// Constructor that initializes Windows Form.
@@ -80,7 +83,7 @@ namespace Arkanoid
 
         /// <summary>
         /// Creates Panel that will visualize the game and initializes all
-        /// the important components of the UI.
+        /// the important components of the GUI.
         /// </summary>
         private void initializeGame()
         {
@@ -99,10 +102,10 @@ namespace Arkanoid
 
             initializeHearts();
 
-            initializePowerUpUI();
-            initializePaddleUI();
-            initializeBallUI();
-            initializeBrickMapUI();
+            initializePowerUpGUI();
+            initializePaddleGUI();
+            initializeBallGUI();
+            initializeBrickMapGUI();
         }
 
         /// <summary>
@@ -126,76 +129,76 @@ namespace Arkanoid
         }
 
         /// <summary>
-        /// Initializes PaddleUI and adds its PictureBox to Panel.Controls.
+        /// Initializes PaddleGUI and adds its PictureBox to Panel.Controls.
         /// </summary>
-        private void initializePaddleUI()
+        private void initializePaddleGUI()
         {
-            paddleUI = new PaddleUI(panel, game.paddle);
-            panel.Controls.Add(paddleUI.pictureBox);
-            paddleUI.pictureBox.BringToFront();
-            //paddleUI.pictureBox.Parent = panel;
+            paddleGUI = new PaddleGUI(panel, game.paddle);
+            panel.Controls.Add(paddleGUI.pictureBox);
+            paddleGUI.pictureBox.BringToFront();
+            //paddleGUI.pictureBox.Parent = panel;
         }
 
         /// <summary>
-        /// Initializes BallUI and adds its PictureBox to Panel.Controls.
+        /// Initializes BallGUI and adds its PictureBox to Panel.Controls.
         /// </summary>
-        private void initializeBallUI()
+        private void initializeBallGUI()
         {
-            ballsUI = new BallUI[game.maxBallsCount];
+            ballsGUI = new BallGUI[game.maxBallsCount];
             for(int i = 0; i < game.balls.Length; i++)
             {
                 Ball ball = game.balls[i];
                 if (ball == null) continue;
 
-                BallUI ballUI = new BallUI(panel, ball);
-                panel.Controls.Add(ballUI.pictureBox);
-                ballsUI[i] = ballUI;
-                ballUI.pictureBox.BringToFront();
+                BallGUI ballGUI = new BallGUI(panel, ball);
+                panel.Controls.Add(ballGUI.pictureBox);
+                ballsGUI[i] = ballGUI;
+                ballGUI.pictureBox.BringToFront();
             }
         }
 
         /// <summary>
-        /// Initializes BrickMapUI and adds its PictureBoxes to Panel.Controls.
+        /// Initializes BrickMapGUI and adds its PictureBoxes to Panel.Controls.
         /// </summary>
-        private void initializeBrickMapUI()
+        private void initializeBrickMapGUI()
         {
-            brickMapUI = new BrickMapUI(panel, resourceManager, game);
-            AddBrickMapUIToControls();
+            brickMapGUI = new BrickMapGUI(panel, resourceManager, game);
+            AddBrickMapGUIToControls();
         }
 
         /// <summary>
-        /// Initializes PowerUpUI and adds its PictureBox to Panel.Controls.
+        /// Initializes PowerUpGUI and adds its PictureBox to Panel.Controls.
         /// </summary>
-        private void initializePowerUpUI()
+        private void initializePowerUpGUI()
         {
             if (game.powerUp == null) return;
 
-            powerUpUI = new PowerUpUI(panel, game.powerUp);
-            panel.Controls.Add(powerUpUI.pictureBox);
-            powerUpUI.pictureBox.BringToFront();
+            powerUpGUI = new PowerUpGUI(panel, game.powerUp);
+            panel.Controls.Add(powerUpGUI.pictureBox);
+            powerUpGUI.pictureBox.BringToFront();
         }
 
 
         /// <summary>
-        /// Removes PictureBox representing PowerUp from Panel.Controls and clears PowerUpUI.
+        /// Removes PictureBox representing PowerUp from Panel.Controls and clears PowerUpGUI.
         /// </summary>
-        private void clearPowerUpUI()
+        private void clearPowerUpGUI()
         {
-            if (powerUpUI == null) return;
-            panel.Controls.Remove(powerUpUI.pictureBox);
-            powerUpUI = null;
+            if (powerUpGUI == null) return;
+            panel.Controls.Remove(powerUpGUI.pictureBox);
+            powerUpGUI = null;
         }
 
         /// <summary>
         /// Adds PictureBoxes representing instances of Arkanoid.Brick in the brick map to Panel.Controls.
         /// </summary>
-        private void AddBrickMapUIToControls()
+        private void AddBrickMapGUIToControls()
         {
-            for (int line = 0; line < brickMapUI.bricksPicBoxes.Count; line++)
+            for (int line = 0; line < brickMapGUI.bricksPicBoxes.Count; line++)
             {
-                for (int column = 0; column < brickMapUI.bricksPicBoxes[0].Count; column++)
+                for (int column = 0; column < brickMapGUI.bricksPicBoxes[0].Count; column++)
                 {
-                    PictureBox pBox = brickMapUI.bricksPicBoxes[line][column];
+                    PictureBox pBox = brickMapGUI.bricksPicBoxes[line][column];
                     if (pBox == null) continue;
 
                     panel.Controls.Add(pBox);
@@ -205,19 +208,19 @@ namespace Arkanoid
         }
 
         /// <summary>
-        /// Removes PictureBoxes representing Bricks from Panel.Controls and clears BrickMapUI.
+        /// Removes PictureBoxes representing Bricks from Panel.Controls and clears BrickMapGUI.
         /// </summary>
-        private void clearBrickMapUI()
+        private void clearBrickMapGUI()
         {
-            for (int line = 0; line < brickMapUI.bricksPicBoxes.Count; line++)
+            for (int line = 0; line < brickMapGUI.bricksPicBoxes.Count; line++)
             {
-                for (int column = 0; column < brickMapUI.bricksPicBoxes[0].Count; column++)
+                for (int column = 0; column < brickMapGUI.bricksPicBoxes[0].Count; column++)
                 {
-                    PictureBox pBox = brickMapUI.bricksPicBoxes[line][column];
+                    PictureBox pBox = brickMapGUI.bricksPicBoxes[line][column];
                     panel.Controls.Remove(pBox);
                 }
             }
-            brickMapUI.bricksPicBoxes.Clear();
+            brickMapGUI.bricksPicBoxes.Clear();
         }
 
         /// <summary>
@@ -267,9 +270,9 @@ namespace Arkanoid
                     case EventManager.GameStopper.LEVELUP:
                         showInfoLabel("level " + game.level.ToString());
                         updateLevelLabel();
-                        clearBrickMapUI();
-                        brickMapUI.updatePicBoxes(game);
-                        AddBrickMapUIToControls();
+                        clearBrickMapGUI();
+                        brickMapGUI.updatePicBoxes(game);
+                        AddBrickMapGUIToControls();
                         break;
                     // life down
                     case EventManager.GameStopper.LIFEDOWN:
@@ -283,9 +286,9 @@ namespace Arkanoid
                         updateHearts();
                         updateLevelLabel();
                         updateScoreLabel();
-                        clearBrickMapUI();
-                        brickMapUI.updatePicBoxes(game);
-                        AddBrickMapUIToControls();
+                        clearBrickMapGUI();
+                        brickMapGUI.updatePicBoxes(game);
+                        AddBrickMapGUIToControls();
                         game.eventManager.reset();
                         break;
                     // win!
@@ -296,63 +299,63 @@ namespace Arkanoid
                         return;
                 }
             }
-            // if brick was hit in gameTick, update BrickMapUI
+            // if brick was hit in gameTick, update BrickMapGUI
             if(game.eventManager.brickHit == true)
             {
-                brickMapUI.update();
+                brickMapGUI.update();
                 updateScoreLabel();
             }
             
-            paddleUI.updatePosition();
+            paddleGUI.updatePosition();
             
-            for(int i = 0; i < ballsUI.Length; i++)
+            for(int i = 0; i < ballsGUI.Length; i++)
             {
-                BallUI ballUI = ballsUI[i];
+                BallGUI ballGUI = ballsGUI[i];
 
                 //some change in number of balls has occured
-                if((ballUI == null && game.balls[i] != null) | (ballUI != null && !ReferenceEquals(ballUI.ball, game.balls[i])))
+                if((ballGUI == null && game.balls[i] != null) | (ballGUI != null && !ReferenceEquals(ballGUI.ball, game.balls[i])))
                 {
-                    //ballUI no longer represents alive ball
-                    if(ballUI != null && game.balls[i] == null)
+                    //ballGUI no longer represents alive ball
+                    if(ballGUI != null && game.balls[i] == null)
                     {
-                        panel.Controls.Remove(ballUI.pictureBox);
-                        ballsUI[i] = null;
+                        panel.Controls.Remove(ballGUI.pictureBox);
+                        ballsGUI[i] = null;
                         continue;
                     }
-                    //ballUI needs to create a UI for new ball
-                    if(ballUI == null && game.balls[i] != null)
+                    //ballGUI needs to create a GUI for new ball
+                    if(ballGUI == null && game.balls[i] != null)
                     {
-                        ballsUI[i] = new BallUI(panel, game.balls[i]);
-                        panel.Controls.Add(ballsUI[i].pictureBox);
+                        ballsGUI[i] = new BallGUI(panel, game.balls[i]);
+                        panel.Controls.Add(ballsGUI[i].pictureBox);
                     }
-                    // a change has occured in the order of the balls and the UI needs to be refreshed
-                    if(ballUI != null && !ReferenceEquals(ballUI.ball, game.balls[i]))
+                    // a change has occured in the order of the balls and the GUI needs to be refreshed
+                    if(ballGUI != null && !ReferenceEquals(ballGUI.ball, game.balls[i]))
                     {
-                        ballsUI[i].ball = game.balls[i];
+                        ballsGUI[i].ball = game.balls[i];
                     }
                     
                 }
                 
-                if(ballUI != null) ballUI.updatePosition();
+                if(ballGUI != null) ballGUI.updatePosition();
             }
             // managing power ups
             if (game.powerUpPresent)
             {
-                if (powerUpUI == null) powerUpUI = new PowerUpUI(panel, game.powerUp);
+                if (powerUpGUI == null) powerUpGUI = new PowerUpGUI(panel, game.powerUp);
                 if (game.eventManager.powerupState == EventManager.PowerUpState.EXISTS
                     || game.eventManager.powerupState == EventManager.PowerUpState.FALLING)
                 {
-                    powerUpUI.pictureBox.Visible = true;
+                    powerUpGUI.pictureBox.Visible = true;
                 }
                 else if(game.eventManager.powerupState == EventManager.PowerUpState.TAKEN
                     || game.eventManager.powerupState == EventManager.PowerUpState.NONE)
                 {
-                    powerUpUI.pictureBox.Visible = false;
+                    powerUpGUI.pictureBox.Visible = false;
                 }
                 
-                powerUpUI.updatePosition();
+                powerUpGUI.updatePosition();
             }
-            else clearPowerUpUI();
+            else clearPowerUpGUI();
             // resets eventManager from previous gameTick
             game.eventManager.reset();
         }
@@ -366,9 +369,9 @@ namespace Arkanoid
             infoLabel.Visible = true;
             infoLabel.BringToFront();
             infoLabel.Text = text;
-            foreach(BallUI ballUI in ballsUI)
+            foreach(BallGUI ballGUI in ballsGUI)
             {
-                if(ballUI != null) ballUI.pictureBox.BringToFront();
+                if(ballGUI != null) ballGUI.pictureBox.BringToFront();
             }
         }
 
@@ -387,9 +390,9 @@ namespace Arkanoid
                 if (game.paddle.holdsBall)
                 {
                     game.balls[0].x += game.paddle.speed;
-                    ballsUI[0].updatePosition();
+                    ballsGUI[0].updatePosition();
                 }
-                paddleUI.updatePosition();
+                paddleGUI.updatePosition();
             }
             else if(e.KeyData == Keys.Left)
             {
@@ -399,9 +402,9 @@ namespace Arkanoid
                 if (game.paddle.holdsBall)
                 {
                     game.balls[0].x -= game.paddle.speed;
-                    ballsUI[0].updatePosition();
+                    ballsGUI[0].updatePosition();
                 }
-                paddleUI.updatePosition();
+                paddleGUI.updatePosition();
             }
             
         }

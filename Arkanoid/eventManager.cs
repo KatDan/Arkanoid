@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace Arkanoid
 {
     /// <summary>
-    /// A singleton class that is used for communication between the UI and the internal mechanisms of the game.
+    /// A singleton class that is used for communication between the GUI and the internal mechanisms of the game.
     /// </summary>
     public class EventManager
     {

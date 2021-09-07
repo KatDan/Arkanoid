@@ -16,7 +16,7 @@ namespace Arkanoid
     public class Game
     {
         /// <summary>
-        /// Arkanoid.EventManager instance that is used for communication between the UI and this class.
+        /// Arkanoid.EventManager instance that is used for communication between the GUI and this class.
         /// </summary>
         internal EventManager eventManager = new EventManager();
 
@@ -141,7 +141,7 @@ namespace Arkanoid
         /// <summary>
         /// A constructor that sets the initial position of objects at the very start of the game.
         /// </summary>
-        /// <param name="bounds">System.Drawing.Rectangle that represents the bounds of panel used for he UI.</param>
+        /// <param name="bounds">System.Drawing.Rectangle that represents the bounds of panel used for he GUI.</param>
         public Game(Rectangle bounds) 
         {
             panelBounds = bounds;
@@ -209,7 +209,7 @@ namespace Arkanoid
                     result.Add(brickLine);
                 }
             }
-            if (result.Count < 1) throw new LevelFormatException("At least one line of blocks is required.");
+            if (result.Count < 1) throw new LevelFormatException("At least one line of blocks is reqGUIred.");
             return result;
         }
 

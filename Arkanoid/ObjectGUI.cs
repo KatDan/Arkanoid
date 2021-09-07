@@ -7,9 +7,9 @@ using System.Windows.Forms;
 namespace Arkanoid
 {
     /// <summary>
-    /// An abstract class for the interfaces between the UI and the objects in a game.
+    /// An abstract class for the interfaces between the GUI and the objects in a game.
     /// </summary>
-    public abstract class ObjectUI
+    public abstract class ObjectGUI
     {
         /// <summary>
         /// A System.Windows.Forms.PictureBox instance that visualizes the object from the game.
@@ -23,21 +23,21 @@ namespace Arkanoid
     }
 
     /// <summary>
-    /// A class that visualizes Arkanoid.Ball in the UI.
+    /// A class that visualizes Arkanoid.Ball in the GUI.
     /// </summary>
-    public class BallUI : ObjectUI
+    public class BallGUI : ObjectGUI
     {
         /// <summary>
-        /// Arkanoid.Ball object that is represented by pictureBox in the UI.
+        /// Arkanoid.Ball object that is represented by pictureBox in the GUI.
         /// </summary>
         internal Ball ball;
 
         /// <summary>
         /// A constructor that sets pictureBox properties before adding it to Controls.
         /// </summary>
-        /// <param name="panel"> System.Windows.Forms.Panel that is used as the UI of the game.</param>
-        /// <param name="ball">Arkanoid.Ball object needed to be represented in the UI.</param>
-        public BallUI(Panel panel, Ball ball)
+        /// <param name="panel"> System.Windows.Forms.Panel that is used as the GUI of the game.</param>
+        /// <param name="ball">Arkanoid.Ball object needed to be represented in the GUI.</param>
+        public BallGUI(Panel panel, Ball ball)
         {
             this.ball = ball;
             this.pictureBox = new PictureBox
@@ -63,21 +63,21 @@ namespace Arkanoid
     }
 
     /// <summary>
-    /// A class that visualizes Arkanoid.Paddle in the UI.
+    /// A class that visualizes Arkanoid.Paddle in the GUI.
     /// </summary>
-    public class PaddleUI : ObjectUI
+    public class PaddleGUI : ObjectGUI
     {
         /// <summary>
-        /// Arkanoid.Paddle object that is represented by pictureBox in the UI.
+        /// Arkanoid.Paddle object that is represented by pictureBox in the GUI.
         /// </summary>
         Paddle paddle;
 
         /// <summary>
         /// A constructor that sets pictureBox properties before adding it to Controls.
         /// </summary>
-        /// <param name="panel"> System.Windows.Forms.Panel that is used as the UI of the game.</param>
-        /// <param name="paddle">Arkanoid.Paddle object needed to be represented in the UI.</param>
-        public PaddleUI(Panel panel, Paddle paddle)
+        /// <param name="panel"> System.Windows.Forms.Panel that is used as the GUI of the game.</param>
+        /// <param name="paddle">Arkanoid.Paddle object needed to be represented in the GUI.</param>
+        public PaddleGUI(Panel panel, Paddle paddle)
         {
             this.paddle = paddle;
             this.pictureBox = new PictureBox
@@ -101,12 +101,12 @@ namespace Arkanoid
     }
 
     /// <summary>
-    /// A class that visualizes Arkanoid.Ball in the UI.
+    /// A class that visualizes Arkanoid.Ball in the GUI.
     /// </summary>
-    public class PowerUpUI : ObjectUI
+    public class PowerUpGUI : ObjectGUI
     {
         /// <summary>
-        /// Arkanoid.PowerUp object that is represented by pictureBox in the UI.
+        /// Arkanoid.PowerUp object that is represented by pictureBox in the GUI.
         /// </summary>
         PowerUp powerUp;
 
@@ -122,9 +122,9 @@ namespace Arkanoid
         /// <summary>
         /// A constructor that sets pictureBox properties before adding it to Controls.
         /// </summary>
-        /// <param name="panel"> System.Windows.Forms.Panel that is used as the UI of the game.</param>
-        /// <param name="powerUp">Arkanoid.PowerUp object needed to be represented in the UI.</param>
-        public PowerUpUI(Panel panel, PowerUp powerUp)
+        /// <param name="panel"> System.Windows.Forms.Panel that is used as the GUI of the game.</param>
+        /// <param name="powerUp">Arkanoid.PowerUp object needed to be represented in the GUI.</param>
+        public PowerUpGUI(Panel panel, PowerUp powerUp)
         {
             this.powerUp = powerUp;
             pictureBox = new PictureBox
@@ -176,9 +176,9 @@ namespace Arkanoid
     }
 
     /// <summary>
-    /// A class that visualizes levels' brick map in the UI.
+    /// A class that visualizes levels' brick map in the GUI.
     /// </summary>
-    public class BrickMapUI
+    public class BrickMapGUI
     {
         /// <summary>
         /// 2D list of bricks that are set in the current level.
@@ -199,7 +199,7 @@ namespace Arkanoid
         /// </summary>
         Coords[] recentlyHitBricks;
         /// <summary>
-        /// Panel used as the UI.
+        /// Panel used as the GUI.
         /// </summary>
         Panel panel;
 
@@ -207,10 +207,10 @@ namespace Arkanoid
         /// A constructor that initializes 2D list of picture boxes representing
         /// individual bricks of brickMap.
         /// </summary>
-        /// <param name="panel">System.Windows.Forms.Panel used as the UI.</param>
+        /// <param name="panel">System.Windows.Forms.Panel used as the GUI.</param>
         /// <param name="resourceManager">System.Resources.ResourceManager that manages resources for this project.</param>
-        /// <param name="game">Arkanoid.Game that needs to be visualized in the UI.</param>
-        public BrickMapUI(Panel panel, ResourceManager resourceManager, Game game)
+        /// <param name="game">Arkanoid.Game that needs to be visualized in the GUI.</param>
+        public BrickMapGUI(Panel panel, ResourceManager resourceManager, Game game)
         {
             this.resourceManager = resourceManager;
             this.recentlyHitBricks = new Coords[game.maxBallsCount];
@@ -225,7 +225,7 @@ namespace Arkanoid
         /// Sets the new PictureBox array when level of the game is changed, 
         /// so it represents current brick map of the level.
         /// </summary>
-        /// <param name="game">Arkanoid.Game that is visualized in the UI.</param>
+        /// <param name="game">Arkanoid.Game that is visualized in the GUI.</param>
         public void updatePicBoxes(Game game)
         {
             brickMap = game.levelBrickMap;

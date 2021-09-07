@@ -221,7 +221,7 @@ namespace Arkanoid.Properties {
         /// <summary>
         ///   Looks up a localized string similar to 4;1;1;2;2;1;1;4
         ///1;1;2;1;1;2;1;1
-        ///1;1;1;3;3;1;1;1
+        ///5;1;1;3;3;1;1;5
         ///1;1;2;1;1;2;1;1
         ///4;1;1;2;2;1;1;4
         ///.
