@@ -78,7 +78,9 @@ namespace Arkanoid
 
             // the angle between the ball's center, the circle's center and a horizontal line
             // that intersects the circle's center
-            double theta = Math.Acos(xDist / game.paddle.internalCurvatureRadius);
+            double theta = Math.Asin(xDist / game.paddle.internalCurvatureRadius);
+            if (ball.x - game.paddle.x <= 0) theta += Math.PI / 2;
+            else theta = Math.PI / 2 - theta;
 
             // New angle of the ball after bouncing
             double newAlpha = 2 * theta - ball.Angle - Math.PI;
@@ -106,11 +108,13 @@ namespace Arkanoid
         /// <param name="column">column of the hit brick in the brick map.
         /// If any brick isn't hit, it is set to -1.
         /// </param>
+        /// <param name="isFrontHit"> bool whether the ball hit the side of the brick or its back/front. </param>
         /// <returns>true, if ball hits any brick, false otherwise.</returns>
-        public bool ballHitsBrick(Ball ball, out int row, out int column)
+        public bool ballHitsBrick(Ball ball, out int row, out int column, out bool isFrontHit)
         {
             row = -1;
             column = -1;
+            isFrontHit = true;
 
             // if upper bound of the ball is lower than the lowest bricks, returns false
             if (ball.y - ball.radius > game.levelBrickMap.Count * game.brickHeight) return false;
@@ -159,6 +163,8 @@ namespace Arkanoid
                                     // brick is hit!
                                     row = rowIterator;
                                     column = columnIterator;
+                                    isFrontHit = innerSquareMaxX - column * game.brickWidth >= (row + 1) * game.brickHeight - innerSquareMinY;
+
                                     return true;
                                 }
                             }
@@ -178,6 +184,7 @@ namespace Arkanoid
                                     // brick is hit!
                                     row = rowIterator;
                                     column = columnIterator;
+                                    isFrontHit = (column+1) * game.brickWidth - innerSquareMinX  >= (row + 1) * game.brickHeight - innerSquareMinY;
                                     return true;
                                 }
                             }
@@ -197,6 +204,7 @@ namespace Arkanoid
                                     // brick is hit!
                                     row = rowIterator;
                                     column = columnIterator;
+                                    isFrontHit = (column+1) * game.brickWidth - innerSquareMinX >= innerSquareMaxY - row * game.brickHeight;
                                     return true;
                                 }
                             }
@@ -216,6 +224,7 @@ namespace Arkanoid
                                     // brick is hit!
                                     row = rowIterator;
                                     column = columnIterator;
+                                    isFrontHit = innerSquareMaxX - column * game.brickWidth >= innerSquareMaxY - row * game.brickHeight;
                                     return true;
                                 }
                             }
@@ -225,6 +234,43 @@ namespace Arkanoid
                 default: break;
             }
             return false;
+        }
+
+        /// <summary>
+        /// Checks whether the brick was hit from its side or from its front
+        /// </summary>
+        /// <param name="ball"> Arkanoid.Ball instance.</param>
+        /// <param name="row"> row of the brick. </param>
+        /// <param name="column"> column of the brick. </param>
+        /// <param name="game"> Arkanoid.Game instance containing brick size. </param>
+        /// <returns> true if brick was hit from the front, false otherwise. </returns>
+        private bool isBallBrickHitFront(Ball ball, int row, int column, Game game)
+        {
+            int verticalCrossLength = 0;
+            int horizontalCrossLength = 0;
+            //ball is falling down
+            if(ball.angleQuadrant >= 3)
+            {
+                verticalCrossLength = (int)(ball.y + ball.radius - row * game.brickHeight);
+            }
+            //ball is going up
+            else
+            {
+                verticalCrossLength = (int)((row + 1) * game.brickHeight - (ball.y - ball.radius));
+            }
+
+            // ball is going to the left
+            if(ball.angleQuadrant == 2 || ball.angleQuadrant == 3)
+            {
+                verticalCrossLength = (int)((column + 1) * game.brickWidth - (ball.x - ball.radius));
+            }
+            //ball is going to the right
+            else
+            {
+                verticalCrossLength = (int)(ball.x + ball.radius - column * game.brickWidth);
+            }
+
+            return verticalCrossLength >= horizontalCrossLength;
         }
 
         /// <summary>

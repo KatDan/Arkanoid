@@ -123,16 +123,6 @@ namespace Arkanoid.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap cihla {
-            get {
-                object obj = ResourceManager.GetObject("cihla", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
         internal static System.Drawing.Bitmap crack1 {
             get {
                 object obj = ResourceManager.GetObject("crack1", resourceCulture);
@@ -191,12 +181,11 @@ namespace Arkanoid.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to 4;1;1;2;2;1;1;4
-        ///1;1;2;1;1;2;1;1
-        ///1;1;1;3;3;1;1;1
-        ///1;1;2;1;1;2;1;1
-        ///4;1;1;2;2;1;1;4
-        ///.
+        ///   Looks up a localized string similar to 2;0;2;0;2;0;2;0;2;0;2
+        ///0;2;0;2;0;2;0;2;0;2;0
+        ///2;0;2;0;2;4;2;0;2;0;2
+        ///0;2;0;2;0;2;0;2;0;2;0
+        ///2;0;2;0;2;0;2;0;2;0;2.
         /// </summary>
         internal static string level1 {
             get {
@@ -205,12 +194,11 @@ namespace Arkanoid.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to 1;1;2;1;1;1;2;1;1;1
-        ///1;1;1;2;1;2;1;1;1;1
-        ///1;1;1;1;2;1;1;1;1;1
-        ///1;1;1;2;1;2;1;1;1;1
-        ///1;1;2;1;1;1;2;1;1;1
-        ///.
+        ///   Looks up a localized string similar to 5;1;5;1;5;1;5;1
+        ///1;4;1;4;1;4;1;4
+        ///3;1;3;1;3;1;3;1
+        ///1;2;1;2;1;2;1;2
+        ///1;1;1;1;1;1;1;1.
         /// </summary>
         internal static string level2 {
             get {
@@ -221,7 +209,7 @@ namespace Arkanoid.Properties {
         /// <summary>
         ///   Looks up a localized string similar to 4;1;1;2;2;1;1;4
         ///1;1;2;1;1;2;1;1
-        ///5;1;1;3;3;1;1;5
+        ///1;1;1;3;3;1;1;1
         ///1;1;2;1;1;2;1;1
         ///4;1;1;2;2;1;1;4
         ///.

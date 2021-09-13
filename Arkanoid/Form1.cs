@@ -382,31 +382,7 @@ namespace Arkanoid
         /// <param name="e"></param>
         private void keyIsDown(object sender, KeyEventArgs e)
         {
-            if(e.KeyData == Keys.Right)
-            {
-                if (game.paddle.x + game.paddle.Width / 2 >= Width - 18) return;
 
-                game.paddle.x += game.paddle.speed;
-                if (game.paddle.holdsBall)
-                {
-                    game.balls[0].x += game.paddle.speed;
-                    ballsGUI[0].updatePosition();
-                }
-                paddleGUI.updatePosition();
-            }
-            else if(e.KeyData == Keys.Left)
-            {
-                if (game.paddle.x - game.paddle.Width / 2 <= 1) return;
-
-                game.paddle.x -= game.paddle.speed;
-                if (game.paddle.holdsBall)
-                {
-                    game.balls[0].x -= game.paddle.speed;
-                    ballsGUI[0].updatePosition();
-                }
-                paddleGUI.updatePosition();
-            }
-            
         }
 
         /// <summary>
@@ -437,5 +413,35 @@ namespace Arkanoid
             }
             
         }
+
+        protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
+        {
+            if (keyData == Keys.Right)
+            {
+                if (game.paddle.x + game.paddle.Width / 2 >= Width - 18) return true;
+
+                game.paddle.x += game.paddle.speed;
+                if (game.paddle.holdsBall)
+                {
+                    game.balls[0].x += game.paddle.speed;
+                    ballsGUI[0].updatePosition();
+                }
+                paddleGUI.updatePosition();
+            }
+            else if (keyData == Keys.Left)
+            {
+                if (game.paddle.x - game.paddle.Width / 2 <= 1) return true;
+
+                game.paddle.x -= game.paddle.speed;
+                if (game.paddle.holdsBall)
+                {
+                    game.balls[0].x -= game.paddle.speed;
+                    ballsGUI[0].updatePosition();
+                }
+                paddleGUI.updatePosition();
+            }
+            return base.ProcessCmdKey(ref msg, keyData);
+        }
+
     }
 }

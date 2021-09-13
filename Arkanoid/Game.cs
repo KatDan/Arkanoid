@@ -433,7 +433,7 @@ namespace Arkanoid
 
                 // checking for ball hitting the wall or the bricks
                 if (collider.ballHitsWall(ball)) collider.bounceHorizontally(ball);
-                if (collider.ballHitsBrick(ball, out int row, out int column))
+                if (collider.ballHitsBrick(ball, out int row, out int column, out bool isFrontHit))
                 {
                     // hit of the brick!
                     if (row == -1 || column == -1) break;
@@ -461,7 +461,8 @@ namespace Arkanoid
                             }
                         }
                     }
-                    collider.bounceVertically(ball);
+                    if (isFrontHit) collider.bounceVertically(ball);
+                    else collider.bounceHorizontally(ball);
                 }
                 ball.move();
             }
